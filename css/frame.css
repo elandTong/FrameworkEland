@@ -1,0 +1,153 @@
+body {
+    position: fixed;
+    margin: 0px;
+    overflow: hidden;
+    box-sizing: border-box
+}
+
+div {
+    box-sizing: border-box
+}
+
+.pages {
+    position: absolute;
+    overflow: hidden;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box
+}
+
+.pages-popupbox {
+    position: absolute;
+    display: none
+}
+
+.pages-popupbox-content {
+    position: fixed;
+    left: 50%;
+    top: 100%;
+    transform: translate(-50%, -100%);
+    z-index: -1
+}
+
+/**
+ * 消息盒子样式
+ **/
+.pages-msgbox {
+    position: absolute;
+    display: none;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    z-index: -1
+}
+
+.pages-msgbox-content {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center
+}
+
+.pages-msgbox-content-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 45px;
+    background: #CCCCCC
+}
+
+.pages-msgbox-content-top-back {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.pages-msgbox-content-top-text {
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.pages-msgbox-content-view {
+    width: 100%;
+    height: 200px;
+    background: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+/**
+ * Toast样式
+ **/
+.pages-toast {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0);
+    z-index: -1
+}
+
+.pages-toast-content {
+    height: auto;
+    width: auto;
+    max-width: 90%;
+    line-height: 120%;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    word-wrap: break-word;
+    word-break: break-all;
+    background: #383838;
+    font-size: 16px;
+    color: #cccccc
+}
+
+/**
+ * 加载圈样式
+ **/
+#pages-load {
+    position: absolute;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0);
+    z-index: -1
+}
+
+#pages-load-content {
+    width: 100px;
+    height: 100px
+}
+
+/**
+ * 下拉刷新
+ **/
+@keyframes linearRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

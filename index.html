@@ -1,0 +1,64 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <!-- force screen orientation on some browser -->
+    <meta name="screen-orientation" content="landscape" />
+
+    <meta name="x5-orientation" content="landscape" />
+
+    <title>framework Eland</title>
+
+    <script language="javascript" type="text/javascript" src="framework/depend/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="framework/depend/jquery.transit.js"></script>
+    <script language="javascript" type="text/javascript" src="framework/depend/jquery.cookie.js"></script>
+    <script language="javascript" type="text/javascript" src="framework/depend/spin.min.js"></script>
+    <script language="javascript" type="text/javascript" src="framework/depend/swiper.min.js"></script>
+
+    <link rel="stylesheet" href="css/frame.css" />
+    <link rel="stylesheet" href="css/swiper.min.css" />
+    <link rel="stylesheet" href="css/spin.css" />
+</head>
+
+<body oncontextmenu="return false" onselectstart="return false">
+    <div class="pages" id="app">
+        <!-- Main界面 id 遵循尾固定 -->
+        <div class="pages-activity" id="app_main">
+            <div class="pages-activity-root" id="app_main_root">
+                <div class="pages-activity-top" id="app_main_top"></div>
+                <div class="pages-activity-content" id="app_main_content"></div>
+                <div class="pages-activity-drawe" id="app_main_drawe"></div>
+                <div class="pages-activity-drawe-menu" id="app_main_drawe_menu"></div>
+            </div>
+        </div>
+
+        <!-- 弹窗盒子 id 遵循尾固定 -->
+        <div class="pages-popupbox" id="popupBox">
+            <div class="pages-popupbox-content" id="popupBox_content"></div>
+        </div>
+
+        <!-- 消息盒子 id 遵循尾固定 -->
+        <div class="pages-msgbox" id="msgBox">
+            <div class="pages-msgbox-content" id="msgBox_content"></div>
+        </div>
+
+        <!-- 提示盒子 id 遵循尾固定 -->
+        <div class="pages-toast" id="toast">
+            <div class="pages-toast-content" id="toast_content">message</div>
+        </div>
+
+        <!-- 加载盒子 id 遵循尾固定 -->
+        <div class="pages-load" id="loading">
+            <div class="pages-load-content" id="loading_content"></div>
+        </div>
+    </div>
+</body>
+
+<script language="javascript" type="text/javascript" src="dome/constant.js"></script>
+<script language="javascript" type="text/javascript" src="dome/config.js"></script>
+<script language="javascript" type="module" src="dome/app.js"></script>
+
+</html>
