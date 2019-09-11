@@ -57,6 +57,10 @@ export default class PullToList {
 
     rotateTimer = null // 控制 下拉刷新 转圈 的时间计时器
 
+    isPauseDown = false
+
+    isPauseUp = false
+
     constructor(opts) {
         if (opts == null || opts.rootId == null) {
             return
@@ -88,6 +92,8 @@ export default class PullToList {
         this.isLoadMore = false
         this.hasMore = true
         this.rotateTimer = null
+        this.isPauseDown = false
+        this.isPauseUp = false
 
         this._init()
     }
@@ -201,6 +207,10 @@ export default class PullToList {
         })
 
         this._el.addEventListener('touchmove', (e) => {
+            if (this.isPauseDown == true) {
+                return
+            }
+
             let scrollTop = this._el.scrollTop
 
             this.currentY = e.touches[0].clientY
@@ -241,7 +251,7 @@ export default class PullToList {
         })
 
         this._el.addEventListener('scroll', (e) => {
-            if (this.options.isopenBotPull == false) {
+            if (this.options.isopenBotPull == false || this.isPauseUp == true) {
                 return
             }
 
@@ -406,5 +416,13 @@ export default class PullToList {
         this.isRefresh = true
 
         this.moveBack(this.options.topRingradius * 2) // 下拉刷新时停留的位置距离屏幕顶部的距离
+    }
+
+    setPauseDown(isPause) {
+        this.isPauseDown = isPause
+    }
+
+    setPauseUp(isPause) {
+        this.isPauseUp = isPause
     }
 }
