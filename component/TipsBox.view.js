@@ -145,7 +145,7 @@ export default class TipsBox extends BaseComponent {
 
         $('#' + this._opts.rootId).css({
             'display': 'block',
-            'z-index': ++routing.currentZIndex
+            'z-index': routing.changedZIndex()
         })
 
         if (this._showopts.isHideBackBtn) {

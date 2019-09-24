@@ -74,7 +74,7 @@ export default class PopupBox extends BaseComponent {
 
     _bindOK() {
         $('#' + this._opts.rootId).css({
-            'z-index': ++Routing.currentZIndex
+            'z-index': Routing.changedZIndex()
         })
 
         if (this._opts.isfadeIn) {

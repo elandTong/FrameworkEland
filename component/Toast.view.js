@@ -52,7 +52,7 @@ export default class Toast extends BaseComponent {
 
     show(msg) {
         this.toast.css({
-            'z-index': ++routing.currentZIndex
+            'z-index': routing.changedZIndex()
         })
 
         $('#' + this._opts.rootId + '_content').html(msg)

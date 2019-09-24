@@ -118,7 +118,7 @@ export default class SpinnerView extends BaseComponent {
         this._showopts = AppTool.structureAssignment(this._showopts, showopts, true)
 
         $('#' + this._opts.rootId).css({
-            'z-index': ++routing.currentZIndex
+            'z-index': routing.changedZIndex()
         })
 
         $('#' + this._opts.rootId).fadeIn(500)
