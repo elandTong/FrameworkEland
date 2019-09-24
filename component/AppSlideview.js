@@ -1,5 +1,5 @@
-import AppTool from '../tool/appTool.js'
-import BaseComponent from './BaseComponent.js'
+import AppTool from '../tool/AppTool.js'
+import BaseComponent from '../base/AppComponent.js'
 
 /**
  *v1.0.1 拖拽部件

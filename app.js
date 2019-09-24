@@ -1,8 +1,8 @@
-import Activity from '../component/appCompActivity.js';
-import Pageview from '../component/appCompPageview.js';
-import ElandTab from '../component/appCompTab.js';
-import FrameworkEland from '../framework/framework.js';
-import Listview from '../component/appCompListview.js';
+import Activity from './component/AppActivity.js';
+import Pageview from './component/AppPageview.js';
+import ElandTab from './component/AppTabview.js';
+import FrameworkEland from './base/AppFramework.js';
+import Listview from './component/AppListview.js';
 
 class AppDome {
     frame = null
@@ -20,7 +20,7 @@ class AppDome {
             rootId: 'app_main',
             name: null, // 优先级高于 getContent
             getContent: null,
-            setStyle: () => {},
+            setStyle: () => { },
             title: '',
             toolbarTopFontSize: '16px',
             toolbarTopFontStyle: '', // italic oblique
@@ -59,8 +59,8 @@ class AppDome {
                     getContent: () => {
                         return 'welcome framework dome'
                     },
-                    setStyle: () => {},
-                    backHandle: () => {}
+                    setStyle: () => { },
+                    backHandle: () => { }
                 })
             },
             resumeHandel: () => {
@@ -107,7 +107,7 @@ class AppDome {
                     emptyview: () => {
                         return '没有数据喔喔哦喔'
                     },
-                    emptystyle: () => {},
+                    emptystyle: () => { },
                     downHandle: (handle) => {
                         setTimeout(() => {
                             let lis = []
@@ -192,8 +192,8 @@ class AppDome {
                     getContent: () => {
                         return 'welcome framework dome'
                     },
-                    setStyle: () => {},
-                    backHandle: () => {}
+                    setStyle: () => { },
+                    backHandle: () => { }
                 })
             },
             resumeHandel: () => {
@@ -323,8 +323,8 @@ class AppDome {
                         colorLine: '#cca352', // tab 标题下划线选中 颜色
                         colorLineNone: 'red', // tab 标题下划线未选中 颜色
                         touchType: 'def',
-                        getContent: () => {},
-                        setStyle: () => {}
+                        getContent: () => { },
+                        setStyle: () => { }
                     }, {
                         menu: 'CD', // tab 标题
                         name: './pages/sub.html',
@@ -340,7 +340,7 @@ class AppDome {
                         getContent: () => {
                             return 'framework eland'
                         },
-                        setStyle: () => {}
+                        setStyle: () => { }
                     }, {
                         menu: 'EF', // tab 标题
                         name: './pages/main.html',
@@ -353,8 +353,8 @@ class AppDome {
                         colorLine: '#cca352', // tab 标题下划线选中 颜色
                         colorLineNone: 'blue', // tab 标题下划线未选中 颜色
                         touchType: 'def',
-                        getContent: () => {},
-                        setStyle: () => {}
+                        getContent: () => { },
+                        setStyle: () => { }
                     }, {
                         menu: 'GH', // tab 标题
                         name: './pages/sub.html',
@@ -370,7 +370,7 @@ class AppDome {
                         getContent: () => {
                             return 'framework eland'
                         },
-                        setStyle: () => {}
+                        setStyle: () => { }
                     }, {
                         menu: 'OP', // tab 标题
                         name: './pages/main.html',
@@ -383,8 +383,8 @@ class AppDome {
                         colorLine: '#cca352', // tab 标题下划线选中 颜色
                         colorLineNone: 'red', // tab 标题下划线未选中 颜色
                         touchType: 'def',
-                        getContent: () => {},
-                        setStyle: () => {}
+                        getContent: () => { },
+                        setStyle: () => { }
                     }]
                 })
 
@@ -461,8 +461,8 @@ class AppDome {
             getContent: () => {
                 return 'welcome framework dome'
             },
-            setStyle: () => {},
-            backHandle: function () {}
+            setStyle: () => { },
+            backHandle: function () { }
         })
     }
 
@@ -472,9 +472,9 @@ class AppDome {
             getContent: () => {
                 return '<div style="width: 200px;height: 200px;background: blue"></div>'
             },
-            setStyle: () => {},
-            bindHandle: () => {},
-            closeHandle: () => {}
+            setStyle: () => { },
+            bindHandle: () => { },
+            closeHandle: () => { }
         })
     }
 

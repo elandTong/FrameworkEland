@@ -1,10 +1,10 @@
-import LoadView from '../component/appCompLoad.js';
-import MsgBox from '../component/appCompDialog.js';
-import AppPopupBox from '../component/appCompPopup.js';
-import AppToast from '../component/appCompToast.js';
-import AppTool from '../component/appTool.js';
-import routing from './routing.js/index.js';
-import AppActivity from '../component/appCompActivity.js';
+import LoadView from '../component/AppSpinview.js';
+import MsgBox from '../component/AppDialog.js';
+import AppPopupBox from '../component/AppPopupview.js';
+import AppToast from '../component/AppToast.js';
+import AppTool from '../tool/AppTool.js';
+import routing from './AppRouting.js';
+import AppActivity from '../component/AppActivity.js';
 
 /**
  * FrameworkEland

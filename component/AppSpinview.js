@@ -1,6 +1,6 @@
-import AppTool from '../tool/appTool.js'
-import routing from '../framework/routing.js'
-import BaseComponent from './BaseComponent.js'
+import AppTool from '../tool/AppTool.js'
+import routing from '../base/AppRouting.js'
+import BaseComponent from '../base/AppComponent.js'
 
 export default class AppSpinview extends BaseComponent {
     _opts = {
