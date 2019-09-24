@@ -1,10 +1,10 @@
-import LoadView from '../component/AppSpinview.js';
-import MsgBox from '../component/AppDialog.js';
-import AppPopupBox from '../component/AppPopupview.js';
-import AppToast from '../component/AppToast.js';
+import LoadView from '../component/Spinview.js/index.js';
+import MsgBox from '../component/Dialog.js/index.js';
+import AppPopupBox from '../component/Popupview.js/index.js';
+import AppToast from '../component/Toast.js/index.js';
 import AppTool from '../tool/AppTool.js';
-import routing from './AppRouting.js';
-import AppActivity from '../component/AppActivity.js';
+import routing from './Routing.js/index.js';
+import AppActivity from '../component/Activity.js/index.js';
 
 /**
  * FrameworkEland

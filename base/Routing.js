@@ -1,4 +1,4 @@
-import AppActivity from '../component/AppActivity.js'
+import AppActivity from '../component/Activity.js'
 
 /**
  * 组件路由管理

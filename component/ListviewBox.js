@@ -1,6 +1,6 @@
 import BaseComponent from "../base/AppComponent.js"
 
-export default class AppListviewBox extends BaseComponent {
+export default class ListviewBox extends BaseComponent {
     _defaults = {
         rootId: '',
         threshold: 100, // 滑动触发下拉刷新的距离

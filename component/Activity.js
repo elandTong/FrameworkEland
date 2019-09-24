@@ -1,8 +1,8 @@
-import routing from '../base/AppRouting.js';
+import routing from '../base/Routing.js/index.js';
 import AppTool from '../tool/AppTool.js';
 import BaseComponent from '../base/AppComponent.js';
 
-class AppToolbar {
+class Toolbar {
     // button opts
     _button_opts = {
         level: 1,
@@ -490,7 +490,7 @@ class AppToolbar {
     }
 }
 
-class AppActivity extends BaseComponent {
+class Activity extends BaseComponent {
     _opts = { // 配置对象
         rootId: '',
         isMainAct: false,
@@ -706,7 +706,7 @@ class AppActivity extends BaseComponent {
             e.stopPropagation()
         })
 
-        this.toolbar = new AppToolbar({
+        this.toolbar = new Toolbar({
             activity: this,
             topId: this._opts.rootId + '_top',
             topH: this._opts.toolbar.topH,
@@ -981,4 +981,4 @@ class AppActivity extends BaseComponent {
     }
 }
 
-export default AppActivity
+export default Activity

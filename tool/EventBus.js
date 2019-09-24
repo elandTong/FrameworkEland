@@ -1,4 +1,4 @@
-export default class EmitEventBus {
+export default class EventBus {
     subList = []
 
     constructor() {

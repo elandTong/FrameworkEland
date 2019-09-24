@@ -1,7 +1,7 @@
 import AppTool from '../tool/AppTool.js'
 import BaseComponent from '../base/AppComponent.js'
 
-export default class AppPageview extends BaseComponent{
+export default class Pageview extends BaseComponent{
     pageview = null
 
     conetntCount = 0

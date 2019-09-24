@@ -1,8 +1,8 @@
 import AppTool from '../tool/AppTool.js'
-import routing from '../base/AppRouting.js'
+import routing from '../base/Routing.js/index.js'
 import BaseComponent from '../base/AppComponent.js'
 
-export default class AppSpinview extends BaseComponent {
+export default class SpinnerView extends BaseComponent {
     _opts = {
         rootId: 'loading',
         maskOpacity: 0,

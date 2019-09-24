@@ -1,6 +1,6 @@
-import EmitEventBus from './AppEventBus.js';
+import EmitEventBus from './EventBus.js';
 
-export default class AppTool {
+export default class Tool {
     static T0EventList = [] // 唯一事件队列
 
     static mEventBusObj = new EmitEventBus()
@@ -259,7 +259,7 @@ export default class AppTool {
                 async: asyn,
                 xhrFields: xhrField,
                 timeout: outTime,
-                beforeSend: function (xmlhttprequest) {},
+                beforeSend: function (xmlhttprequest) { },
                 success: function (data) {
                     let result
 
@@ -278,7 +278,7 @@ export default class AppTool {
                         errHandle(error)
                     }
                 },
-                complete: function () {}
+                complete: function () { }
             })
 
             window.runOuttimeAjax = 0
@@ -298,7 +298,7 @@ export default class AppTool {
                 url: url,
                 async: true,
                 timeout: 5000,
-                beforeSend: function (xmlhttprequest) {},
+                beforeSend: function (xmlhttprequest) { },
                 success: function (data) {
                     let result
 
@@ -317,7 +317,7 @@ export default class AppTool {
                         errHandle(error)
                     }
                 },
-                complete: function () {}
+                complete: function () { }
             })
 
             window.runOuttimeAjax = 0
@@ -453,7 +453,7 @@ export default class AppTool {
         })
 
         // 移动
-        obj.on(this.moveEvent, function (e) {})
+        obj.on(this.moveEvent, function (e) { })
 
         if (this.startEvent == 'mousedown') {
             obj.on('click', function (e) {
