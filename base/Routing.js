@@ -1,4 +1,4 @@
-import AppActivity from '../component/Activity.js'
+import Activity from '../component/Activity.view.js'
 
 /**
  * 组件路由管理
@@ -14,14 +14,14 @@ export default class Routing {
     static isMainActMount = false // 主 act 是否已经挂载
 
     static pushActivity(activity) {
-        if (activity == null || !(activity instanceof AppActivity)) {
+        if (activity == null || !(activity instanceof Activity)) {
             return
         }
 
         // 暂停
         let last = this.activityStack[this.activityStack.length - 1]
 
-        if (last instanceof AppActivity) {
+        if (last instanceof Activity) {
             last.onPause()
         }
 
@@ -42,7 +42,7 @@ export default class Routing {
             return
         }
 
-        if (activity == null || !(activity instanceof AppActivity) || this.activityStack.length <= 1) {
+        if (activity == null || !(activity instanceof Activity) || this.activityStack.length <= 1) {
             return
         }
 
@@ -59,7 +59,7 @@ export default class Routing {
             // 恢复
             let last = this.activityStack[this.activityStack.length - 1]
 
-            if (last instanceof AppActivity) {
+            if (last instanceof Activity) {
                 last.onResume()
             }
         } else {

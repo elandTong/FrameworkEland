@@ -1,6 +1,6 @@
-import AppTool from "../tool/AppTool.js";
-import ListviewBox from "./ListviewBox.js/index.js";
-import BaseComponent from "../base/AppComponent.js";
+import AppTool from "../tool/Tool.js";
+import ListviewBox from "./ListviewBox.view.js";
+import BaseComponent from "../base/Component.js";
 
 export default class Listview extends BaseComponent{
     _opts = {

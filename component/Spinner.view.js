@@ -1,6 +1,6 @@
-import AppTool from '../tool/AppTool.js'
-import routing from '../base/Routing.js/index.js'
-import BaseComponent from '../base/AppComponent.js'
+import AppTool from '../tool/Tool.js'
+import routing from '../base/Routing.js'
+import BaseComponent from '../base/Component.js'
 
 export default class SpinnerView extends BaseComponent {
     _opts = {

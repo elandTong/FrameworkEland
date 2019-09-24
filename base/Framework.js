@@ -1,10 +1,10 @@
-import LoadView from '../component/Spinview.js/index.js';
-import MsgBox from '../component/Dialog.js/index.js';
-import AppPopupBox from '../component/Popupview.js/index.js';
-import AppToast from '../component/Toast.js/index.js';
-import AppTool from '../tool/AppTool.js';
-import routing from './Routing.js/index.js';
-import AppActivity from '../component/Activity.js/index.js';
+import Spinner from '../component/Spinner.view.js';
+import TipsBox from '../component/TipsBox.view.js';
+import PopupBox from '../component/PopupBox.view.js';
+import Toast from '../component/Toast.view.js';
+import AppTool from '../tool/Tool.js';
+import routing from './Routing.js';
+import Activity from '../component/Activity.view.js';
 
 /**
  * FrameworkEland
@@ -23,7 +23,7 @@ export default class FrameworkEland {
 
     mainAtivity = null // 主 act
 
-    msgBox = new MsgBox({
+    msgBox = new TipsBox({
         rootId: 'msgBox',
         topColor: '#cca352',
         topColorDK: '#cca352',
@@ -31,7 +31,7 @@ export default class FrameworkEland {
         textColor: 'black'
     })
 
-    popup = new AppPopupBox({
+    popup = new PopupBox({
         rootId: 'popupBox',
         align: 'center',
         isfadeIn: true,
@@ -39,7 +39,7 @@ export default class FrameworkEland {
         opacity: 0
     })
 
-    toast = new AppToast({
+    toast = new Toast({
         rootId: 'toast',
         maskOpacity: 0,
         colorText: '#cccccc',
@@ -47,7 +47,7 @@ export default class FrameworkEland {
         fontSize: '16px'
     })
 
-    loadview = new LoadView({
+    loadview = new Spinner({
         rootId: 'loading',
         maskOpacity: 0,
         colorSpin: '#FFFFFF',
@@ -73,7 +73,7 @@ export default class FrameworkEland {
 
         console.log('framework structureAssignment opts', this._default_opts)
 
-        this.mainAtivity = new AppActivity(this._default_opts.mainAtivityOpts)
+        this.mainAtivity = new Activity(this._default_opts.mainAtivityOpts)
 
         this.mainAtivity.hideTopBack()
 

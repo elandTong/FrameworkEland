@@ -1,5 +1,5 @@
-import AppTool from '../tool/AppTool.js'
-import BaseComponent from '../base/AppComponent.js'
+import AppTool from '../tool/Tool.js'
+import BaseComponent from '../base/Component.js'
 
 export default class Pageview extends BaseComponent{
     pageview = null

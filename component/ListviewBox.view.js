@@ -1,4 +1,4 @@
-import BaseComponent from "../base/AppComponent.js"
+import BaseComponent from "../base/Component.js"
 
 export default class ListviewBox extends BaseComponent {
     _defaults = {

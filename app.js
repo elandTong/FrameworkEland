@@ -1,8 +1,8 @@
-import Activity from './component/AppActivity.js';
-import Pageview from './component/AppPageview.js';
-import ElandTab from './component/AppTabview.js';
-import FrameworkEland from './base/AppFramework.js';
-import Listview from './component/AppListview.js';
+import Activity from './component/Activity.view.js';
+import Pageview from './component/Pageview.view.js';
+import ElandTab from './component/Tab.view.js';
+import FrameworkEland from './base/Framework.js';
+import Listview from './component/Listview.view.js';
 
 class AppDome {
     frame = null
