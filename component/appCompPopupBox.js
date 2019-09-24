@@ -1,7 +1,8 @@
-import Routing from '../framework/routing.js';
-import AppTool from './appTool.js';
+import Routing from '../base/routing.js/index.js';
+import AppTool from '../tool/appTool.js';
+import BaseComponent from '../base/BaseComponent.js/index.js';
 
-export default class PopupBox {
+export default class AppPopupBox extends BaseComponent{
     _opts = {
         rootId: 'popupBox',
         align: 'center',

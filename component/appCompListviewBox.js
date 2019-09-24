@@ -1,4 +1,6 @@
-export default class PullToList {
+import BaseComponent from "./BaseComponent"
+
+export default class AppListviewBox extends BaseComponent {
     _defaults = {
         rootId: '',
         threshold: 100, // 滑动触发下拉刷新的距离

@@ -1,8 +1,8 @@
-import AppTool from './appTool.js'
-
+import AppTool from '../tool/appTool.js'
 import routing from '../framework/routing.js'
+import BaseComponent from './BaseComponent.js'
 
-export default class LoadView {
+export default class AppSpinview extends BaseComponent {
     _opts = {
         rootId: 'loading',
         maskOpacity: 0,

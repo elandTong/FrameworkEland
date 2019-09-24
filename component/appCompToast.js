@@ -1,8 +1,8 @@
-import routing from '../framework/routing.js'
+import routing from '../base/routing.js'
+import AppTool from '../tool/appTool.js'
+import BaseComponent from './BaseComponent.js'
 
-import AppTool from './appTool.js'
-
-export default class Toast {
+export default class AppToast extends BaseComponent {
     _opts = {
         rootId: 'toast',
         maskOpacity: 0,

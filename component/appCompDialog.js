@@ -1,7 +1,8 @@
-import routing from '../framework/routing.js';
-import AppTool from './appTool.js';
+import routing from '../base/routing.js';
+import AppTool from '../tool/appTool.js';
+import BaseComponent from './BaseComponent.js';
 
-export default class MsgBox {
+export default class AppDialog extends BaseComponent {
     _opts = {
         rootId: 'msgBox',
         topColor: '#cca352',
@@ -126,9 +127,9 @@ export default class MsgBox {
             }
         })
 
-        $('#' + this._opts.rootId + '_content_view').click((event) => {})
+        $('#' + this._opts.rootId + '_content_view').click((event) => { })
 
-        $('#' + this._opts.rootId + '_content_top').click((event) => {})
+        $('#' + this._opts.rootId + '_content_top').click((event) => { })
 
         $('#' + this._opts.rootId + '_content_view').on('click', (event) => {
             event.stopPropagation()

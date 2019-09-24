@@ -1,10 +1,11 @@
-import AppTool from './appTool.js'
+import AppTool from '../tool/appTool.js'
+import BaseComponent from './BaseComponent.js'
 
 /**
  *v1.0.1 拖拽部件
  *过于频繁的拖拽会影响性能
  */
-export default class SlideBox {
+export default class AppSlideview extends BaseComponent {
     initX
     initY
 

@@ -1,10 +1,10 @@
 import LoadView from '../component/appCompLoad.js';
-import MsgBox from '../component/appCompMsgBox.js';
-import PopupBox from '../component/appCompPopup.js';
-import Toast from '../component/appCompToast.js';
+import MsgBox from '../component/appCompDialog.js';
+import AppPopupBox from '../component/appCompPopup.js';
+import AppToast from '../component/appCompToast.js';
 import AppTool from '../component/appTool.js';
-import routing from './routing.js';
-import Activity from '../component/appCompActivity.js';
+import routing from './routing.js/index.js';
+import AppActivity from '../component/appCompActivity.js';
 
 /**
  * FrameworkEland
@@ -31,7 +31,7 @@ export default class FrameworkEland {
         textColor: 'black'
     })
 
-    popup = new PopupBox({
+    popup = new AppPopupBox({
         rootId: 'popupBox',
         align: 'center',
         isfadeIn: true,
@@ -39,7 +39,7 @@ export default class FrameworkEland {
         opacity: 0
     })
 
-    toast = new Toast({
+    toast = new AppToast({
         rootId: 'toast',
         maskOpacity: 0,
         colorText: '#cccccc',
@@ -73,7 +73,7 @@ export default class FrameworkEland {
 
         console.log('framework structureAssignment opts', this._default_opts)
 
-        this.mainAtivity = new Activity(this._default_opts.mainAtivityOpts)
+        this.mainAtivity = new AppActivity(this._default_opts.mainAtivityOpts)
 
         this.mainAtivity.hideTopBack()
 
@@ -111,10 +111,10 @@ export default class FrameworkEland {
     showPopup(opts) {
         let pame = {
             name: null,
-            getContent: () => {},
-            setStyle: () => {},
-            bindHandle: () => {},
-            closeHandle: () => {}
+            getContent: () => { },
+            setStyle: () => { },
+            bindHandle: () => { },
+            closeHandle: () => { }
         }
 
         this.popup.show(opts)

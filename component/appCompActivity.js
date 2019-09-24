@@ -1,592 +1,577 @@
-import routing from '../framework/routing.js';
-import AppTool from './appTool.js';
+import routing from '../base/routing.js/index.js';
+import AppTool from '../tool/appTool.js';
+import BaseComponent from '../base/component.js/index.js.js';
 
-class TopToolbar {
-    _opts = {
-        topId: '',
-        topH: 50,
-        backImg: './pic/theme/back.png',
-        menuImg: './pic/theme/menu.png',
-        logo: null,
-        title: 'FrameworkEland',
-        fontSize: '15px',
-        fontStyle: 'normal', // italic oblique
-        fontWeight: 'normal', // normal bold
-        touchType: 'def', // color zoom
-        colorMain: 'black',
-        colorMainDK: 'black',
-        colorText: 'white',
-        colorBtnTouch: '#cca352',
-        colorShadow: '#000',
-        shadowLen: 2,
-        openBordLine: true,
-        openMenuType: null, // left right
-        activity: null,
-        menuOpts: { // 内部使用属性
-            type: 'btn',
-            touchType: null,
-            img: '',
-            text: '',
-            touchHandle: () => {
-                if (this._opts.activity) {
-                    this._opts.activity.draweMenu()
-                }
-                if (this._opts.menuHandle) {
-                    this._opts.menuHandle()
-                }
-            }
-        },
-        backHandle: null,
-        menuHandle: null,
-        logoTouchHandle: null
+class AppToolbar {
+    // button opts
+    _button_opts = {
+        level: 1,
+        id: null,
+        icon: '',
+        text: '按钮',
+        touchHandle: function () {
+        }
     }
 
-    constructor(opts) {
+    // keep button opts
+    _button_keep_opts = {
+        level: 1,
+        id: null,
+        icon: '',
+        text: '按钮',
+        touchHandle: function () {
+        }
+    }
+
+    // init opts
+    _opts = {
+        activity: null,
+        topId: null,
+        keepId: null,
+        customizeId: null,
+        topH: 50,
+        finish: {
+            active: true,
+            icon: './pic/theme/back.png',
+            touchHandle: function () {
+            }
+        },
+        drawer: {
+            active: false,
+            icon: './pic/theme/menu.png',
+            type: 'right', // left right
+            touchHandle: function () {
+            }
+        },
+        logo: {
+            active: true,
+            icon: null,
+            touchHandle: function () {
+            }
+        },
+        title: {
+            active: true,
+            text: 'FrameworkEland',
+            touchHandle: function () {
+            }
+        },
+        font: {
+            color: 'black',
+            style: 'normal',
+            weight: 'normal',
+        },
+        shadow: {
+            color: '#000',
+            length: 2
+        },
+        buttons: [],
+        background: 'white'
+    }
+
+    constructor(opts) { // 构造器
         if (opts == null || opts.topId == null) {
             return
         }
 
-        if (opts.menuOpts) {
-            opts.menuOpts = null
-        }
-
         this._opts = AppTool.structureAssignment(this._opts, opts, true)
+
+        this._opts.drawer.type = this._opts.drawer.type == 'right' ? 'right' : 'left' // 默认为左
 
         if (this._opts.topH < 50) {
             this._opts.topH = 50
         }
-
         if (this._opts.topH > 60) {
             this._opts.topH = 60
         }
 
-        this._opts.menuOpts.img = this._opts.menuImg
+        this.keep_zone = '<div class="' + this._opts.topId + '_keep_zone"></div>'
 
-        // ------- bind -------
+        this.customize_zone = '<div class="' + this._opts.topId + '_customize_zone"></div>'
 
-        // 框架
-        let left_rot = '<div id="' + this._opts.topId + '_left">[con]</div>'
+        this.item_root = '<div class="' + this._opts.topId + '_item_cas" id="[id]">[con]</div>'
 
-        let right_rot = '<div id="' + this._opts.topId + '_right"></div>'
+        this.icon_root = '<img class="' + this._opts.topId + '_icon_cas" src="[src]"></img>'
 
-        // 元素
-        let back = '<div class="' + this._opts.topId + '_left_btn_cas" id="' + this._opts.topId + '_back">[con]</div>'
+        this.text_root = '<div class="' + this._opts.topId + '_text_cas">[txt]</div>'
 
-        let menu = '<div class="' + this._opts.topId + '_left_btn_cas" id="' + this._opts.topId + '_menu">[con]</div>'
+        this._opts.keepId = this._opts.topId + '_keep_zone'
 
-        let logo = '<img class="' + this._opts.topId + '_left_img_cas" id="' + this._opts.topId + '_logo"/>'
+        this._opts.customizeId = this._opts.topId + '_customize_zone'
 
-        let text = '<div class="' + this._opts.topId + '_left_txt_cas" id="' + this._opts.topId + '_text"></div>'
+        // icon
+        let button_finish = this.item_root.replace('[id]', this._opts.keepId + '_finish')
+            .replace('[con]', this.icon_root.replace('[src]', this._opts.finish.icon))
 
-        back = back.replace('[con]', '<img class="' + this._opts.topId + '_btn_img_cas" src="' + this._opts.backImg + '"/>')
+        // icon
+        let button_drawermenu = this.item_root.replace('[id]', this._opts.keepId + '_drawermenu')
+            .replace('[con]', this.icon_root.replace('[src]', this._opts.drawer.icon))
 
-        menu = menu.replace('[con]', '<img class="' + this._opts.topId + '_btn_img_cas" src="' + this._opts.menuImg + '"/>')
+        // icon
+        let icon_logo = this.item_root.replace('[id]', this._opts.keepId + '_logo')
+            .replace('[con]', this.icon_root.replace('[src]', this._opts.logo.icon))
 
-        left_rot = left_rot.replace('[con]', back + menu + text + logo)
+        // text
+        let text_title = this.item_root.replace('[id]', this._opts.keepId + '_title')
+            .replace('[con]', this.text_root.replace('[txt]', this._opts.title.text))
 
-        $('#' + this._opts.topId).html(left_rot + right_rot)
+        $('#' + this._opts.topId).html(this.keep_zone + this.customize_zone)
 
+        $('#' + this._opts.keepId).html(button_finish + button_drawermenu + text_title + icon_logo)
+
+        // root view style
         $('#' + this._opts.topId).css({
-            'background': '-webkit-linear-gradient(top, ' + this._opts.colorMain + ' 0%,' + this._opts.colorMainDK + ' 100%)',
             'width': $(window).width(),
             'height': this._opts.topH,
+            'background': this._opts.background,
             'display': 'flex',
             'justify-content': 'space-between',
             'align-items': 'center',
-            'box-shadow': '0px 0px ' + this._opts.shadowLen + 'px 0px ' + this._opts.colorShadow
+            'box-shadow': '0px 0px ' + this._opts.shadow.length + 'px 0px ' + this._opts.shadow.color,
+            'box-sizing': 'border-box'
         })
 
-        $('#' + this._opts.topId + '_left').css({
-            'width': '50%',
+        // keep zone view style
+        $('.' + this._opts.keepId).css({
+            'width': 'fit-content',
+            'max-width': '50%',
+            'height': 'fit-content',
             'display': 'flex',
             'justify-content': 'flex-start',
-            'align-items': 'center'
+            'align-items': 'center',
+            'padding': '0px 10px 0px 10px',
+            'box-sizing': 'border-box'
         })
 
-        $('#' + this._opts.topId + '_right').css({
-            'width': '50%',
+        // customize zone view style
+        $('.' + this._opts.customizeId).css({
+            'width': 'fit-content',
+            'max-width': '50%',
+            'height': 'fit-content',
             'display': 'flex',
             'justify-content': 'flex-end',
-            'align-items': 'center'
+            'align-items': 'center',
+            'padding': '0px 10px 0px 10px',
+            'box-sizing': 'border-box'
         })
 
-        $('.' + this._opts.topId + '_left_btn_cas').css({
-            'width': '40px',
-            'height': '40px',
-            'margin-left': '5px',
-            'padding': '2px',
-            'border-radius': '50%',
+        // bind customize zone
+        this._bindCustomizeZone()
+    }
+
+    _update() { // 更新配置项
+        // item root view style
+        $('.' + this._opts.topId + '_item_cas').css({
+            'width': 'fit-content',
+            'height': 'fit-content',
             'display': 'flex',
             'justify-content': 'center',
             'align-items': 'center',
+            'margin-left': '5px',
+            'padding': '3px',
+            'box-sizing': 'border-box'
+        })
+
+        // item icon view style
+        let icon_h = parseInt(this._opts.topH * 0.4)
+        $('.' + this._opts.topId + '_icon_cas').css({
+            'width': 'fit-content',
+            'height': icon_h + 'px',
+            'box-sizing': 'border-box'
+        })
+
+        // item text view style
+        let font_size = parseInt(this._opts.topH * 0.32)
+        $('.' + this._opts.topId + '_text_cas').css({
+            'width': 'fit-content',
+            'height': 'fit-content',
             'overflow': 'hidden',
             'text-overflow': 'ellipsis',
             'white-space': 'nowrap',
-            'font-size': '15px',
-            'font-weight': this._opts.fontWeight,
-            'color': this._opts.colorText,
+            'font-size': font_size + 'px',
+            'font-style': this._opts.font.style,
+            'font-weight': this._opts.font.weight,
+            'color': this._opts.font.color,
             'box-sizing': 'border-box'
         })
-        if (this._opts.openBordLine == true) {
-            $('.' + this._opts.topId + '_left_btn_cas').css({
-                'border': '1px solid ' + this._opts.colorBtnTouch
-            })
+
+        this.setTitle(this._opts.title.text)
+
+        if (this._opts.logo.active) {
+            this.showLogo()
         } else {
-            $('.' + this._opts.topId + '_left_btn_cas').css({
-                'border': ''
-            })
+            this.hideLogo()
         }
 
-        $('.' + this._opts.topId + '_left_img_cas').css({
-            'width': 'auto',
-            'height': '24px',
-            'margin-left': '5px',
-            'max-width': '80px',
-            'box-sizing': 'border-box'
-        })
+        if (this._opts.drawer.active) {
+            this.showDrawerMenu()
+        } else {
+            this.hideDrawerMenu()
+        }
 
-        $('.' + this._opts.topId + '_left_txt_cas').css({
-            'width': 'auto',
-            'height': 'auto',
-            'margin-left': '5px',
-            'max-width': '50%',
-            'overflow': 'hidden',
-            'text-overflow': 'ellipsis',
-            'white-space': 'nowrap',
-            'font-size': this._opts.fontSize,
-            'font-style': this._opts.fontStyle,
-            'font-weight': this._opts.fontWeight,
-            'color': this._opts.colorText,
-            'box-sizing': 'border-box'
-        })
-
-        $('.' + this._opts.topId + '_btn_img_cas').css({
-            'width': 'auto',
-            'height': '20px',
-            'max-width': '30px'
-        })
+        if (this._opts.title.active) {
+            this.showTitle()
+        } else {
+            this.hideTitle()
+        }
 
         let self = this
 
-        $('.' + this._opts.topId + '_left_btn_cas').each(function () {
+        // 保留区 操作项事件绑定
+        $('.' + this._opts.topId + '_item_cas').each(function () {
             let id = this.id
+
             let id_list = id.split('_')
+
             let id_len = id_list.length
 
-            let _run = (type) => {
-                switch (type) {
-                    case 'back': {
-                        if (self._opts.backHandle) {
-                            self._opts.backHandle()
-                        }
-                        break
-                    }
-                    case 'menu': {
-                        if (self._opts.activity) {
-                            self._opts.activity.draweMenu()
-                        }
+            let type = id_list[id_len - 1]
 
-                        if (self._opts.menuHandle) {
-                            self._opts.menuHandle()
-                        }
-                        break
+            let zone = id_list[id_len - 3]
+
+            if (zone != 'keep') { return }
+
+            switch (type) {
+                case 'finish': {
+                    if (self._opts.finish.touchHandle) {
+                        AppTool.setBtnOnTouchEventForScale($(this), 0.9, 1.0, (e) => {
+                            self._opts.finish.touchHandle()
+                        }, null, true)
                     }
+                    break
+                }
+                case 'drawermenu': {
+                    if (self._opts.drawer.touchHandle) {
+                        AppTool.setBtnOnTouchEventForScale($(this), 0.9, 1.0, (e) => {
+                            self._opts.drawer.touchHandle()
+                        }, null, true)
+                    }
+                    break
+                }
+                case 'logo': {
+                    if (self._opts.logo.touchHandle) {
+                        AppTool.setBtnOnTouchEventForScale($(this), 0.9, 1.0, (e) => {
+                            self._opts.logo.touchHandle()
+                        }, null, true)
+                    }
+                    break
+                }
+                case 'title': {
+                    if (self._opts.title.touchHandle) {
+                        AppTool.setBtnOnTouchEventForScale($(this), 0.9, 1.0, (e) => {
+                            self._opts.title.touchHandle()
+                        }, null, true)
+                    }
+                    break
                 }
             }
+        })
 
-            if (self._opts.touchType == 'def' || self._opts.touchType == 'zoom') {
-                AppTool.setBtnOnTouchEventForScale($(this), 0.9, 1.0, (obj) => {
-                    _run(id_list[id_len - 1])
+        // 自定义区 操作项事件绑定
+        for (let i = 0; i < this._opts.buttons.length; i++) {
+            let item = AppTool.structureAssignment(Object.assign({}, this._button_keep_opts), this._opts.buttons[i])
+
+            let _id = this._opts.customizeId + '_' + item.id
+
+            if (item.touchHandle) {
+                AppTool.setBtnOnTouchEventForScale($('#' + _id + '-' + i), 0.9, 1.0, (e) => {
+                    item.touchHandle()
                 }, null, true)
-            } else if (self._opts.touchType == 'color') {
-                AppTool.setBtnOnTouchEvent($(this), (obj) => {
-                    _run(id_list[id_len - 1])
-                }, self._opts.colorBtnTouch, '', null, true)
             }
-        })
-
-        $('.' + this._opts.topId + '_left_img_cas').each(function () {
-            let id = this.id
-            let id_list = id.split('_')
-            let id_len = id_list.length
-
-            let _run = (type) => {
-                switch (type) {
-                    case 'logo': {
-                        if (self._opts.logoTouchHandle) {
-                            self._opts.logoTouchHandle()
-                        }
-                        break
-                    }
-                }
-            }
-
-            AppTool.setBtnOnTouchEventForScale($(this), 0.9, 1.0, (obj) => {
-                _run(id_list[id_len - 1])
-            }, null, true)
-        })
-
-        this.hideLogo()
-
-        this.hideMenu()
-
-        this.setTitle(this._opts.title)
-
-        if (this._opts.openMenuType) { // 抽屉菜单类型 为空则表示不启用抽屉菜单
-            if (this._opts.openMenuType != 'left' && this._opts.openMenuType != 'right') {
-                this._opts.openMenuType = 'left'
-            }
-        }
-
-        if (this._opts.openMenuType == 'left') {
-            this.showMenu()
-        } else if (this._opts.openMenuType == 'right') {
-            this.addOptBtn([this._opts.menuOpts])
         }
     }
 
-    addOptBtn(opts) {
-        if (opts == null || !(opts instanceof Array)) {
+    _bindCustomizeZone() { // 自定义区 VIEW 绑定
+        let new_buttons = [] // 过滤后的项
+
+        let ispushkeep = true // 是否需要推送 drawermenu 项
+
+        // 过滤无效按钮对象
+        for (let i = 0; i < this._opts.buttons.length; i++) {
+            this._button_opts = AppTool.structureAssignment(Object.assign({}, this._button_keep_opts), this._opts.buttons[i])
+
+            if (this._button_opts.id == null) {
+                continue
+            }
+
+            if (this._button_opts.text) {
+                this._button_opts.text = this._button_opts.text.substr(0, 4)
+            }
+
+            if (this._button_opts.iskeep) {
+                ispushkeep = false
+            }
+
+            new_buttons.push(Object.assign({}, this._button_opts))
+        }
+
+        let _sort = () => {
+            return (m, n) => {
+                return m.level - n.level
+            }
+        }
+
+        new_buttons.sort(_sort())
+
+        this._opts.buttons = new_buttons
+
+        if (ispushkeep) {
+            this._opts.buttons.push({
+                level: Number.MAX_SAFE_INTEGER,
+                id: 'drawermenu',
+                icon: './pic/theme/menu.png',
+                text: 'menu',
+                iskeep: true,
+                touchHandle: this._opts.drawer.touchHandle
+            })
+        }
+
+        let views = ''
+
+        for (let i = 0; i < this._opts.buttons.length; i++) {
+            this._button_opts = AppTool.structureAssignment(Object.assign({}, this._button_keep_opts), this._opts.buttons[i])
+
+            let _id = this._opts.customizeId + '_' + this._button_opts.id
+
+            if (this._button_opts.icon) { // 图标按钮
+                views += this.item_root.replace('[id]', _id + '-' + i)
+                    .replace('[con]', this.icon_root.replace('[src]', this._button_opts.icon))
+            } else if (this._button_opts.text) { // 文字按钮
+                views += this.item_root.replace('[id]', _id + '-' + i)
+                    .replace('[con]', this.text_root.replace('[txt]', this._button_opts.text))
+            }
+        }
+
+        $('#' + this._opts.customizeId).html(views)
+
+        this._update()
+
+        console.log('app comp act toolbar for buttons sort', new_buttons)
+    }
+
+    // 用户处理器
+    pushCustomizeItem(opts) { // 推送自定义 VIEW 项
+        if (opts == null || opts.id == null) {
             return
         }
 
-        let _it = {
-            type: 'btn', // text img btn
-            touchType: 'def', // def zoom color 只对 btn type 有效
-            img: '',
-            text: '按钮',
-            touchHandle: null
-        }
+        this._opts.buttons.push(AppTool.structureAssignment(Object.assign({}, this._button_keep_opts), opts))
 
-        let new_opts = []
-
-        // 过滤无效按钮对象
-        let ispumenu = false
-        for (let i = 0; i < opts.length; i++) {
-            let item = opts[i]
-
-            if (item == null || !(item instanceof Object)) {
-                continue
-            }
-
-            if (!item.type || item.type == null) {
-                continue
-            }
-
-            switch (item.type) {
-                case 'btn': {
-                    if ((!item.img || item.img == null) && (!item.text || item.text == null)) {
-                        continue
-                    }
-
-                    break
-                }
-                case 'img': {
-                    if (!item.img || item.img == null) {
-                        continue
-                    }
-
-                    break
-                }
-                case 'text': {
-                    if (!item.text || item.text == null) {
-                        continue
-                    }
-
-                    break
-                }
-                default: {
-                    continue
-                }
-            }
-
-            if (!item.touchType || item.touchType == null) {
-                item['touchType'] = this._opts.touchType // 继承初始化类型
-            }
-
-            if (item.touchHandle && this._opts.menuOpts.touchHandle === item.touchHandle) {
-                ispumenu = true
-            }
-
-            new_opts.push(item)
-        }
-
-        if (this._opts.openMenuType == 'right' && !ispumenu) {
-            new_opts.push(this._opts.menuOpts)
-        }
-
-        let btn = '<div class="' + this._opts.topId + '_right_btn_cas" id="' + this._opts.topId + '_btn_[id]">[con]</div>'
-
-        let img = '<img class="' + this._opts.topId + '_right_img_cas" id="' + this._opts.topId + '_img_[id]" src="[src]"/>'
-
-        let txt = '<div class="' + this._opts.topId + '_right_txt_cas" id="' + this._opts.topId + '_txt_[id]">[con]</div>'
-
-        let btn_img = '<img class="' + this._opts.topId + '_btn_img_cas" src="[src]" />'
-
-        let vis = ''
-
-        for (let i = 0; i < new_opts.length; i++) {
-            let item = new_opts[i]
-
-            switch (item.type) {
-                case 'btn': {
-                    if (item.img) { // 图标按钮
-                        vis += btn.replace('[id]', i).replace('[con]', btn_img.replace('[src]', item.img))
-                    } else if (item.text) { // 文字按钮
-                        vis += btn.replace('[id]', i).replace('[con]', item.text.substr(0, 2))
-                    } else { // 无内容
-                        continue
-                    }
-
-                    break
-                }
-                case 'img': {
-                    vis += img.replace('[id]', i).replace('[src]', item.img)
-
-                    break
-                }
-                case 'text': {
-                    vis += txt.replace('[id]', i).replace('[con]', item.text)
-
-                    break
-                }
-                default: {
-                    continue
-                }
-            }
-        }
-
-        $('#' + this._opts.topId + '_right').html(vis)
-
-        $('.' + this._opts.topId + '_right_btn_cas').css({
-            'width': '40px',
-            'height': '40px',
-            'margin-right': '5px',
-            'padding': '2px',
-            'border-radius': '50%',
-            'display': 'flex',
-            'justify-content': 'center',
-            'align-items': 'center',
-            'overflow': 'hidden',
-            'text-overflow': 'ellipsis',
-            'white-space': 'nowrap',
-            'font-size': '15px',
-            'font-weight': this._opts.fontWeight,
-            'color': this._opts.colorText,
-            'box-sizing': 'border-box'
-        })
-        if (this._opts.openBordLine == true) {
-            $('.' + this._opts.topId + '_right_btn_cas').css({
-                'border': '1px solid ' + this._opts.colorBtnTouch
-            })
-        } else {
-            $('.' + this._opts.topId + '_right_btn_cas').css({
-                'border': ''
-            })
-        }
-
-        $('.' + this._opts.topId + '_right_img_cas').css({
-            'width': 'auto',
-            'height': '24px',
-            'margin-right': '5px',
-            'max-width': '80px',
-            'box-sizing': 'border-box'
-        })
-
-        $('.' + this._opts.topId + '_right_txt_cas').css({
-            'width': 'auto',
-            'height': 'auto',
-            'margin-right': '5px',
-            'max-width': '50%',
-            'overflow': 'hidden',
-            'text-overflow': 'ellipsis',
-            'white-space': 'nowrap',
-            'font-size': this._opts.fontSize,
-            'font-style': this._opts.fontStyle,
-            'font-weight': this._opts.fontWeight,
-            'color': this._opts.colorText,
-            'box-sizing': 'border-box'
-        })
-
-        $('.' + this._opts.topId + '_btn_img_cas').css({
-            'width': 'auto',
-            'height': '20px',
-            'max-width': '30px'
-        })
-
-        let self = this
-
-        $('.' + this._opts.topId + '_right_btn_cas').each(function () {
-            let id = this.id
-            let id_list = id.split('_')
-            let id_len = id_list.length
-            let index = id_list[id_len - 1]
-
-            let item = new_opts[index]
-
-            if (item.touchType == 'def' || item.touchType == 'zoom') {
-                AppTool.setBtnOnTouchEventForScale($(this), 0.9, 1.0, (obj) => {
-                    if (item.touchHandle) {
-                        item.touchHandle()
-                    }
-                }, null, true)
-            } else if (item.touchType == 'color') {
-                AppTool.setBtnOnTouchEvent($(this), (obj) => {
-                    if (item.touchHandle) {
-                        item.touchHandle()
-                    }
-                }, self._opts.colorBtnTouch, '', null, true)
-            }
-        })
-
-        $('.' + this._opts.topId + '_right_img_cas').each(function () {
-            let id = this.id
-            let id_list = id.split('_')
-            let id_len = id_list.length
-            let index = id_list[id_len - 1]
-
-            let item = new_opts[index]
-
-            AppTool.setBtnOnTouchEventForScale($(this), 0.9, 1.0, (obj) => {
-                if (item.touchHandle) {
-                    item.touchHandle()
-                }
-            }, null, true)
-        })
-
-        $('.' + this._opts.topId + '_right_txt_cas').each(function () {
-            let id = this.id
-            let id_list = id.split('_')
-            let id_len = id_list.length
-            let index = id_list[id_len - 1]
-
-            let item = new_opts[index]
-
-            AppTool.setBtnOnTouchEventForScale($(this), 0.9, 1.0, (obj) => {
-                if (item.touchHandle) {
-                    item.touchHandle()
-                }
-            }, null, true)
-        })
+        this._bindCustomizeZone()
     }
 
     show() {
         $('#' + this._opts.topId).css({
             'display': 'flex'
         })
+
+        if (this._opts.activity) {
+            this._opts.activity.onShowToolbar()
+        }
     }
 
     hide() {
         $('#' + this._opts.topId).css({
             'display': 'none'
         })
+
+        if (this._opts.activity) {
+            this._opts.activity.onHideToolbar()
+        }
     }
 
     showBack() {
-        $('#' + this._opts.topId + '_back').css({
+        $('#' + this._opts.keepId + '_finish').css({
             'display': 'flex'
         })
     }
 
     hideBack() {
-        $('#' + this._opts.topId + '_back').css({
+        $('#' + this._opts.keepId + '_finish').css({
             'display': 'none'
         })
     }
 
-    showMenu() {
-        $('#' + this._opts.topId + '_menu').css({
-            'display': 'flex'
-        })
+    showDrawerMenu() {
+        let len = this._opts.buttons.length
+
+        let last = this._opts.buttons[len - 1] // 最后一个为 drawermenu 项
+
+        let left_id = this._opts.keepId + '_drawermenu'
+
+        let right_id = this._opts.customizeId + '_' + last.id + '-' + (len - 1)
+
+        if (this._opts.drawer.type == 'left') {
+            $('#' + left_id).css({
+                'display': 'flex'
+            })
+
+            $('#' + right_id).css({
+                'display': 'none'
+            })
+        } else {
+            $('#' + left_id).css({
+                'display': 'none'
+            })
+
+            $('#' + right_id).css({
+                'display': 'flex'
+            })
+        }
+
+        this._opts.drawer.active = true
     }
 
-    hideMenu() {
-        $('#' + this._opts.topId + '_menu').css({
+    hideDrawerMenu() {
+        let len = this._opts.buttons.length
+
+        let last = this._opts.buttons[len - 1] // 最后一个为 drawermenu 项
+
+        let left_id = this._opts.keepId + '_drawermenu'
+
+        let right_id = this._opts.customizeId + '_' + last.id + '-' + (len - 1)
+
+        $('#' + left_id).css({
             'display': 'none'
         })
+
+        $('#' + right_id).css({
+            'display': 'none'
+        })
+
+        this._opts.drawer.active = false
     }
 
     showLogo() {
-        if (this._opts.logo == null) {
+        if (this._opts.logo.icon == null) {
             return
         }
 
-        $('#' + this._opts.topId + '_logo').attr('src', this._opts.logo)
+        $('#' + this._opts.keepId + '_logo').attr('src', this._opts.logo.icon)
 
-        $('#' + this._opts.topId + '_logo').css({
+        $('#' + this._opts.keepId + '_logo').css({
             'display': 'block'
         })
+
+        this._opts.logo.active = true
     }
 
     hideLogo() {
-        $('#' + this._opts.topId + '_logo').css({
+        $('#' + this._opts.keepId + '_logo').css({
             'display': 'none'
         })
+
+        this._opts.logo.active = false
     }
 
     showTitle() {
-        $('#' + this._opts.topId + '_text').css({
+        $('#' + this._opts.keepId + '_title').css({
             'display': 'block'
         })
+
+        this._opts.title.active = true
     }
 
     hideTitle() {
-        $('#' + this._opts.topId + '_text').css({
+        $('#' + this._opts.keepId + '_title').css({
             'display': 'none'
         })
+
+        this._opts.title.active = false
     }
 
-    setTitle(name) {
-        if (name == null) {
+    setTitle(text) {
+        if (text == null || text == '') {
             return
         }
 
-        $('#' + this._opts.topId + '_text').html(name)
+        $('#' + this._opts.keepId + '_title').html(text)
+
+        this._opts.title.text = text
     }
 }
 
-export default class Activity {
-    _opts = {
+class AppActivity extends BaseComponent {
+    _opts = { // 配置对象
         rootId: '',
         isMainAct: false,
         name: null,
         getContent: null,
         setStyle: null,
-        title: 'FrameworkEland',
-        toolbarTopFontSize: '15px',
-        toolbarTopFontStyle: 'normal', // italic oblique
-        toolbarTopFontWeight: 'normal', // normal bold
-        toolbarTopLogo: null,
-        toolbarTopLogoTouchHandle: null,
-        toolbarTopBackImg: null,
-        toolbarTopMenuImg: null,
-        toolbarTopTouchType: 'def',
-        toolbarTopH: 50,
-        toolbarTopColor: 'black',
-        toolbarTopColorDK: 'black',
-        toolbarTopTextColor: 'white',
-        toolbarTopBtnTouchColor: '#cca352',
-        toolbarTopOpenBtnBordLine: true,
-        toolbarTopShadowColor: null,
-        toolbarTopShadowLen: null,
-        contentBgColor: 'white',
-        contentLoadColor: 'black',
-        draweMenuType: null,
-        draweMenuHandle: null,
-        draweWidthScale: 0.5,
-        draweContentColor: 'white',
-        draweMenuName: '',
-        draweMenuGetContent: null,
-        draweMenuSetStyle: null,
-        finishHandel: null,
-        resumeHandel: null,
-        pauseHandel: null,
-        initHandel: null
+        toolbar: { // 操作栏配置
+            activity: null,
+            topH: 50,
+            finish: {
+                active: true,
+                icon: './pic/theme/back.png',
+                touchHandle: function () {
+                }
+            },
+            drawer: {
+                active: true,
+                icon: './pic/theme/menu.png',
+                type: 'left', // left right
+                touchHandle: function () {
+                }
+            },
+            logo: {
+                active: true,
+                icon: null,
+                touchHandle: function () {
+                }
+            },
+            title: {
+                active: true,
+                text: 'FrameworkEland',
+                align: 'left',
+                touchHandle: function () {
+                }
+            },
+            font: {
+                color: 'black',
+                style: 'normal',
+                weight: 'normal',
+            },
+            shadow: {
+                color: '#000',
+                length: 2
+            },
+            buttons: [],
+            background: 'white'
+        },
+        drawer: { // 抽屉菜单配置
+            icon: './pic/theme/menu.png',
+            type: 'left', // left right
+            background: 'white',
+            widthscale: 0.75,
+            name: '',
+            getContent: function () {
+                return null
+            },
+            setStyle: function () {
+            },
+            initHandle: function () {
+            },
+            changedHandle(isopen) {
+            }
+        },
+        preloading: { // 预加载配置
+            color: 'black'
+        },
+        background: 'white',
+        finishTopHandle: function () {
+        },
+        resumeHandel: function () {
+        },
+        pauseHandel: function () {
+        },
+        initHandel: function () {
+        }
     }
 
     window_w = $(window).width()
-
     window_h = $(window).height()
+
+    toolbar = null // toolbar
 
     page = null // act dom
     page_root = null // act root dom
@@ -595,19 +580,11 @@ export default class Activity {
     page_drawe = null
     page_drawe_menu = null
 
-    mTop = null
-
-    onRoutingCall = null // 路由处理器
-
-    eventTheme = 'PAGE_PUSH_THEME' // act 推送主题
-
-    eventIndex = null // 事件订阅标识
-
-    isResume = false // act 是否处于恢复状态
-
     isshow = false // act 是否显示
 
     constructor(opts) { // act 构造器
+        super()
+
         if (opts == null || opts.rootId == null) {
             return
         }
@@ -628,16 +605,12 @@ export default class Activity {
             }
         }
 
-        if (this._opts.draweMenuType) {
-            if (this._opts.draweMenuType != 'left' && this._opts.draweMenuType != 'right') {
-                this._opts.draweMenuType = 'left'
-            }
-        }
-
-        if (this._opts.draweWidthScale > 0.8) {
-            this._opts.draweWidthScale = 0.8
-        } else if (this._opts.draweWidthScale < 0.2) {
-            this._opts.draweWidthScale = 0.2
+        // 配置检查
+        this._opts.drawer.type = this._opts.drawer.type == 'right' ? 'right' : 'left' // 默认为左
+        if (this._opts.drawer.widthscale > 0.8) {
+            this._opts.drawer.widthscale = 0.8
+        } else if (this._opts.drawer.widthscale < 0.2) {
+            this._opts.drawer.widthscale = 0.2
         }
 
         console.log('activity structureAssignment opts', this._opts)
@@ -689,7 +662,7 @@ export default class Activity {
             'z-index': 8,
             'width': this.window_w,
             'height': this.window_h - this._opts.toolbarTopH,
-            'background': this._opts.contentBgColor
+            'background': this._opts.background
         })
 
         this.page_drawe.css({
@@ -706,21 +679,21 @@ export default class Activity {
         this.page_drawe_menu.css({
             'position': 'absolute',
             'top': 0,
-            'width': (this.window_w * this._opts.draweWidthScale),
+            'width': (this.window_w * this._opts.drawer.widthscale),
             'height': this.window_h,
             'z-index': 11,
-            'background': this._opts.draweContentColor,
+            'background': this._opts.drawer.background,
             'display': 'none'
         })
 
-        if (this._opts.draweMenuType) {
-            if (this._opts.draweMenuType == 'left') {
+        if (this._opts.drawer.type) {
+            if (this._opts.drawer.type == 'left') {
                 this.page_drawe_menu.css({
-                    'left': -(this.window_w * this._opts.draweWidthScale)
+                    'left': -(this.window_w * this._opts.drawer.widthscale)
                 })
-            } else if (this._opts.draweMenuType == 'right') {
+            } else if (this._opts.drawer.type == 'right') {
                 this.page_drawe_menu.css({
-                    'right': -(this.window_w * this._opts.draweWidthScale)
+                    'right': -(this.window_w * this._opts.drawer.widthscale)
                 })
             }
         }
@@ -733,72 +706,75 @@ export default class Activity {
             e.stopPropagation()
         })
 
-        this.mTop = new TopToolbar({
-            topId: this._opts.rootId + '_top',
-            title: this._opts.title,
-            fontSize: this._opts.toolbarTopFontSize,
-            fontStyle: this._opts.toolbarTopFontStyle,
-            fontWeight: this._opts.toolbarTopFontWeight,
-            logo: this._opts.toolbarTopLogo,
-            backImg: this._opts.toolbarTopBackImg,
-            topH: this._opts.toolbarTopH,
-            touchType: this._opts.toolbarTopTouchType,
-            colorMain: this._opts.toolbarTopColor,
-            colorMainDK: this._opts.toolbarTopColorDK,
-            colorText: this._opts.toolbarTopTextColor,
-            colorBtnTouch: this._opts.toolbarTopBtnTouchColor,
-            colorShadow: this._opts.toolbarTopShadowColor,
-            shadowLen: this._opts.toolbarTopShadowLen,
-            openBordLine: this._opts.toolbarTopOpenBtnBordLine,
+        this.toolbar = new AppToolbar({
             activity: this,
-            openMenuType: this._opts.draweMenuType, // left right
-            menuHandle: this._opts.draweMenuHandle,
-            menuImg: this._opts.toolbarTopMenuImg,
-            backHandle: () => { // 顶部返回按钮处理器
-                if (routing.backClickInterceptHandel != null) { // 拦截器 这是全局拦截器
-                    routing.backClickInterceptHandel()
-                } else {
+            topId: this._opts.rootId + '_top',
+            topH: this._opts.toolbar.topH,
+            finish: {
+                active: this._opts.toolbar.finish.active,
+                icon: this._opts.toolbar.finish.icon,
+                touchHandle: () => {
                     this.finish()
                 }
             },
-            logoTouchHandle: this._opts.toolbarTopLogoTouchHandle,
+            drawer: {
+                active: this._opts.toolbar.drawer.active,
+                icon: this._opts.drawer.icon,
+                type: this._opts.drawer.type, // left right
+                touchHandle: () => {
+                    this.draweMenu()
+                }
+            },
+            logo: {
+                active: this._opts.toolbar.logo.active,
+                icon: this._opts.toolbar.logo.icon,
+                touchHandle: this._opts.toolbar.logo.touchHandle
+            },
+            title: {
+                active: this._opts.toolbar.title.active,
+                text: this._opts.toolbar.title.text,
+                align: this._opts.toolbar.title.align,
+                touchHandle: this._opts.toolbar.title.touchHandle
+            },
+            font: {
+                color: this._opts.toolbar.font.color,
+                style: this._opts.toolbar.font.style,
+                weight: this._opts.toolbar.font.weight,
+            },
+            shadow: {
+                color: this._opts.toolbar.shadow.color,
+                length: this._opts.toolbar.shadow.length
+            },
+            buttons: this._opts.toolbar.buttons,
+            background: this._opts.toolbar.background
         })
 
-        this.eventIndex = AppTool.onEmit(this.eventTheme, (obj) => {
-            if (obj['theme'] != this.eventTheme) {
-                return
+        let _this_init = () => {
+            if (this._opts.initHandel != null) {
+                this._opts.initHandel()
             }
+        }
 
-            let unique = obj['TOP_LEVEL']
-
-            if (this.onRoutingCall == null) {
-                return
+        let _drawer_init = () => {
+            if (this._opts.drawer.initHandle) {
+                this._opts.drawer.initHandle()
             }
+        }
 
-            if (unique === this.onRoutingCall) {
-                if (this._opts.resumeHandel != null && !this.isResume) {
-                    this._opts.resumeHandel() // 该 act 恢复
-                }
-
-                this.isResume = true
-            } else {
-                if (this._opts.pauseHandel != null && this.isResume) {
-                    this._opts.pauseHandel() // 该 act 暂停
-                }
-
-                this.isResume = false
-            }
-        })
-
+        // content
         if (this._opts.name) {
             AppTool.LoadHTML({
                 link: this._opts.name,
                 conId: this.page_content.attr('id'),
-                color: this._opts.contentLoadColor,
+                color: this._opts.preloading.color,
                 succHandle: () => {
+                    _this_init()
+
                     console.log('act load content succ')
                 },
                 errHandle: () => {
+                    _this_init()
+
                     console.error('act load content err')
                 },
                 renum: 2
@@ -806,36 +782,39 @@ export default class Activity {
         } else if (this._opts.getContent) {
             this.page_content.html(this._opts.getContent())
 
-            if (this._opts.setStyle != null) {
+            if (this._opts.setStyle) {
                 this._opts.setStyle()
             }
+
+            _this_init()
         }
 
-        if (this._opts.draweMenuType) {
-            if (this._opts.draweMenuName) {
-                AppTool.LoadHTML({
-                    link: this._opts.draweMenuName,
-                    conId: this.page_drawe_menu.attr('id'),
-                    color: this._opts.contentLoadColor,
-                    succHandle: () => {
-                        console.log('act drawe menu load content succ')
-                    },
-                    errHandle: () => {
-                        console.error('act drawe menu load content err')
-                    },
-                    renum: 2
-                })
-            } else if (this._opts.draweMenuGetContent) {
-                this.page_drawe_menu.html(this._opts.draweMenuGetContent())
+        // drawer
+        if (this._opts.drawer.name) {
+            AppTool.LoadHTML({
+                link: this._opts.drawer.name,
+                conId: this.page_drawe_menu.attr('id'),
+                color: this._opts.preloading.color,
+                succHandle: () => {
+                    _drawer_init()
 
-                if (this._opts.draweMenuSetStyle != null) {
-                    this._opts.draweMenuSetStyle()
-                }
+                    console.log('act drawe menu load content succ')
+                },
+                errHandle: () => {
+                    _drawer_init()
+
+                    console.error('act drawe menu load content err')
+                },
+                renum: 2
+            })
+        } else if (this._opts.drawer.getContent) {
+            this.page_drawe_menu.html(this._opts.drawer.getContent())
+
+            if (this._opts.drawer.setStyle) {
+                this._opts.drawer.setStyle()
             }
-        }
 
-        if (this._opts.initHandel != null) {
-            this._opts.initHandel()
+            _drawer_init()
         }
     }
 
@@ -846,22 +825,7 @@ export default class Activity {
             return
         }
 
-        this.onRoutingCall = () => { // 路由处器理 将 act 界面的退出操作交由路由器处理
-            this._stop()
-
-            if (this._opts.finishHandel != null) {
-                this._opts.finishHandel()
-            }
-        }
-
-        this.page.css({
-            'display': 'block',
-            'z-index': ++routing.currentZIndex
-        })
-
-        this._show()
-
-        routing.pushActivity(this.onRoutingCall)
+        routing.pushActivity(this)
     }
 
     draweMenu() {
@@ -877,146 +841,144 @@ export default class Activity {
     }
 
     openDraweMenu() {
-        if (!this._opts.draweMenuType) {
+        if (!this._opts.drawer.type) {
             return
         }
 
-        this.page_drawe.css({
-            'display': 'block'
-        })
+        this.page_drawe.css('display', 'block')
 
-        this.page_drawe_menu.css({
-            'display': 'block'
-        })
+        this.page_drawe_menu.css('display', 'block')
 
-        if (this._opts.draweMenuType == 'left') {
+        let _run = () => {
+            if (this._opts.drawer.changedHandle) {
+                this._opts.drawer.changedHandle(true)
+            }
+        }
+
+        if (this._opts.drawer.type == 'left') {
             this.page_drawe_menu.transition({
                 left: 0
-            }, 'fast')
+            }, 'fast', _run)
         } else {
             this.page_drawe_menu.transition({
                 right: 0
-            }, 'fast')
+            }, 'fast', _run)
         }
 
         console.log('open drawe menu')
     }
 
     closeDraweMenu() {
-        if (!this._opts.draweMenuType) {
+        if (!this._opts.drawer.type) {
             return
         }
 
         let _run = () => {
-            this.page_drawe_menu.css({
-                'display': 'none'
-            })
+            this.page_drawe_menu.css('display', 'none')
 
-            this.page_drawe.css({
-                'display': 'none'
-            })
+            this.page_drawe.css('display', 'none')
+
+            if (this._opts.drawer.changedHandle) {
+                this._opts.drawer.changedHandle(false)
+            }
         }
 
-        if (this._opts.draweMenuType == 'left') {
+        if (this._opts.drawer.type == 'left') {
             this.page_drawe_menu.transition({
-                left: -(this.window_w * this._opts.draweWidthScale)
+                left: -(this.window_w * this._opts.drawer.widthscale)
             }, 'fast', _run)
         } else {
             this.page_drawe_menu.transition({
-                right: -(this.window_w * this._opts.draweWidthScale)
+                right: -(this.window_w * this._opts.drawer.widthscale)
             }, 'fast', _run)
         }
 
         console.log('close drawe menu')
     }
 
-    onResume(handel) {
-        this._opts.resumeHandel = handel
+    onResume() {
+        super.onResume()
+
+        if (this._opts.resumeHandel) {
+            this._opts.resumeHandel()
+        }
     }
 
-    onPause(handel) {
-        this._opts.pauseHandel = handel
+    onPause() {
+        super.onPause()
+
+        if (this._opts.pauseHandel) {
+            this._opts.pauseHandel()
+        }
     }
 
-    addTopOptBtn(opts) {
-        this.mTop.addOptBtn(opts)
-    }
-
-    // 显示 隐藏 工具栏
-    showTop() {
-        this.mTop.show()
-
-        this.page_content.css({
-            'top': this._opts.toolbarTopH,
-            'height': this.window_h - this._opts.toolbarTopH
-        })
-    }
-
-    hideTop() {
-        this.mTop.hide()
-
-        this.page_content.css({
-            'top': 0,
-            'height': this.window_h
-        })
-    }
-
-    // 显示 隐藏 返回按钮
-    showTopBack() {
-        this.mTop.showBack()
-    }
-
-    hideTopBack() {
-        this.mTop.hideBack()
-    }
-
-    // 显示 隐藏 Logo
-    showTopLogo() {
-        this.mTop.showLogo()
-    }
-
-    hideTopLogo() {
-        this.mTop.hideLogo()
-    }
-
-    // 显示 隐藏 标题
-    showTopTitle() {
-        this.mTop.showTitle()
-    }
-
-    hideTopTitle() {
-        this.mTop.hideTitle()
-    }
-
-    setTitle(name) {
-        this.mTop.setTitle(name)
-    }
-
+    // activity 基础处理器
     finish() {
-        routing.finish(this.onRoutingCall)
+        routing.finish(this)
     }
 
-    setInterceptHandel(han) {
-        routing.backClickInterceptHandel = han
+    setInterceptHandel(handle) {
+        routing.setInterceptHandel(handle)
     }
 
-    _show() {
+    onCreate() {
+        super.onCreate()
+
+        this.page.css({
+            'display': 'block',
+            'z-index': routing.changedZIndex()
+        })
+
         if (this._opts.isMainAct == false) { // 非主 act
             this.page.transition({
+
                 x: -this.window_w
+
             }, 'fast')
         }
 
         this.isshow = true
     }
 
-    _stop() { // 内部方法
+    onDestroy() {
+        super.onDestroy()
+
         if (this._opts.isMainAct == false) { // 非主 act
             this.page.transition({
+
                 x: 0
+
             }, 'fast')
 
             this.isshow = false
         }
+
+        if (this._opts.finishTopHandle) {
+            this._opts.finishTopHandle()
+        }
+    }
+
+    onUpdate() {
+        super.onUpdate()
+    }
+
+    onShowToolbar() {
+        this.page_content.css({
+            'top': this._opts.toolbarTopH,
+            'height': this.window_h - this._opts.toolbarTopH
+        })
+    }
+
+    onHideToolbar() {
+        this.page_content.css({
+            'top': 0,
+            'height': this.window_h
+        })
+    }
+
+    getToolbar() {
+        return this.toolbar
     }
 }
+
+export default AppActivity

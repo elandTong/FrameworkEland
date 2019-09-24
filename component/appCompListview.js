@@ -1,7 +1,8 @@
-import PullToList from "./appCompPullToList.js";
-import AppTool from "./appTool.js";
+import AppTool from "../tool/appTool.js";
+import ListviewBox from "./appCompListviewBox.js";
+import BaseComponent from "./BaseComponent.js";
 
-export default class Listview {
+export default class AppListview extends BaseComponent{
     _opts = {
         rootId: '',
         threshold: 100,
@@ -53,7 +54,7 @@ export default class Listview {
         this._rootdom.html('<div id="' + this._opts.rootId + '_content"></div>')
 
         if (this._opts.ispull) {
-            this._pull = new PullToList({
+            this._pull = new ListviewBox({
                 rootId: this._opts.rootId,
                 threshold: this._opts.threshold,
                 topRingradius: this._opts.topRingradius,

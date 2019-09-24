@@ -1,4 +1,4 @@
-import EmitEventBus from './appCompEventBus.js';
+import EmitEventBus from './appEventBus.js';
 
 export default class AppTool {
     static T0EventList = [] // 唯一事件队列

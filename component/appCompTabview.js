@@ -1,6 +1,7 @@
-import AppTool from './appTool.js';
+import AppTool from '../tool/appTool.js';
+import BaseComponent from './BaseComponent.js';
 
-export default class ElandTab {
+export default class AppTabview extends BaseComponent{
     pageview = null
 
     conetntCount = 0
