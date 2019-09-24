@@ -1,10 +1,10 @@
+import Activity from '../component/Activity.view.js';
+import PopupBox from '../component/PopupBox.view.js';
 import Spinner from '../component/Spinner.view.js';
 import TipsBox from '../component/TipsBox.view.js';
-import PopupBox from '../component/PopupBox.view.js';
 import Toast from '../component/Toast.view.js';
 import AppTool from '../tool/Tool.js';
 import routing from './Routing.js';
-import Activity from '../component/Activity.view.js';
 
 /**
  * FrameworkEland

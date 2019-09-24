@@ -1,6 +1,6 @@
+import BaseComponent from '../base/Component.js';
 import routing from '../base/Routing.js';
 import AppTool from '../tool/Tool.js';
-import BaseComponent from '../base/Component.js';
 
 class Toolbar {
     // button opts

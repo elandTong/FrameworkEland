@@ -1,6 +1,6 @@
-import Routing from '../base/Routing.js';
-import AppTool from '../tool/Tool.js';
 import BaseComponent from '../base/Component.js';
+import routing from '../base/Routing.js';
+import AppTool from '../tool/Tool.js';
 
 export default class PopupBox extends BaseComponent {
     _opts = {
@@ -74,7 +74,7 @@ export default class PopupBox extends BaseComponent {
 
     _bindOK() {
         $('#' + this._opts.rootId).css({
-            'z-index': Routing.changedZIndex()
+            'z-index': routing.changedZIndex()
         })
 
         if (this._opts.isfadeIn) {

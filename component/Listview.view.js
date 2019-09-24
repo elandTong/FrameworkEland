@@ -1,8 +1,8 @@
+import BaseComponent from "../base/Component.js";
 import AppTool from "../tool/Tool.js";
 import ListviewBox from "./ListviewBox.view.js";
-import BaseComponent from "../base/Component.js";
 
-export default class Listview extends BaseComponent{
+export default class Listview extends BaseComponent {
     _opts = {
         rootId: '',
         threshold: 100,

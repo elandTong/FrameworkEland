@@ -3,7 +3,7 @@ FrameworkEland
 
 欢迎使用FRAMEWORK ELAND
 
-    Framework Eland - 是一个免费的开源HTML移动框架，用于开发具有原生本机外观的混合移动应用程序或Web应用程序。它也是一个不可或缺的原型应用工具，可以在需要时尽快显示工作应用原型。Framework Eland由Eland Tong 创建。
+    Framework Eland - 是一个免费的开源HTML移动框架，用于开发具有原生本机外观的Web应用程序。它也是一个不可或缺的原型应用工具，可以在需要时尽快显示工作应用原型。Framework Eland由Eland Tong 创建。
     
     Framework Eland 的主要方法是让您有机会轻松，清晰地创建HTML，CSS和JavaScript的iOS和Android（材质）应用程序。Framework Eland 充满了自由。它不会限制您的想象力或以某种方式提供任何解决方案的方式。Framework Eland为您提供自由！
     
