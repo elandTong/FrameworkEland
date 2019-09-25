@@ -1,7 +1,7 @@
 import BaseComponent from '../base/Component.js';
 import AppTool from '../tool/Tool.js';
 
-export default class TabView extends BaseComponent {
+export default class SwiperTab extends BaseComponent {
     pageview = null
 
     conetntCount = 0

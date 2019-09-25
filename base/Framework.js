@@ -1,6 +1,6 @@
 import Activity from '../component/Activity.view.js';
 import PopupBox from '../component/PopupBox.view.js';
-import Spinner from '../component/Spinner.view.js';
+import SpinnerBox from '../component/SpinnerBox.view.js';
 import TipsBox from '../component/TipsBox.view.js';
 import Toast from '../component/Toast.view.js';
 import AppTool from '../tool/Tool.js';
@@ -47,7 +47,7 @@ export default class FrameworkEland {
         fontSize: '16px'
     })
 
-    loadview = new Spinner({
+    loadview = new SpinnerBox({
         rootId: 'loading',
         maskOpacity: 0,
         colorSpin: '#FFFFFF',

@@ -1,4 +1,5 @@
 import EmitEventBus from './EventBus.js';
+import Spinner from '../component/Spinner.view.js';
 
 export default class Tool {
     static T0EventList = [] // 唯一事件队列

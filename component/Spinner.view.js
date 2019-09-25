@@ -1,184 +1,118 @@
 import BaseComponent from '../base/Component.js'
-import routing from '../base/Routing.js'
-import AppTool from '../tool/Tool.js'
+import Tool from '../tool/Tool.js'
 
-export default class SpinnerView extends BaseComponent {
+export default class Spinner extends BaseComponent {
+    dom = null
+
     _opts = {
-        rootId: 'loading',
-        maskOpacity: 0,
-        colorSpin: '#FFFFFF',
-        colorBox: 'rgba(56,56,56,0.5)',
-        colorBoxLine: 'white',
-        colorText: 'white',
-        textWeight: 'bold', // normal
-        isTouchCancel: true
+        color: '#FFFFFF', // 花瓣颜色
+        petalRadius: 6, // 花瓣半径
+        internalRadius: 16, // 内径
+        petalSum: 10, // 花瓣数量
     }
-
-    _showopts = {
-        mode: 1,
-        text: 'Framework',
-        tag: null
-    }
-
-    spinner = null
-
-    isshow = false
 
     constructor(opts) {
-        this._opts = AppTool.structureAssignment(this._opts, opts, true)
+        this._opts = Tool.structureAssignment(this._opts, opts, true)
 
-        this.spinner = new Spinner({
-            color: this._opts.colorSpin
-        })
-
-        let root = '<div id="' + this._opts.rootId + '_content_root">[con]</div>'
-        let view = '<div id="' + this._opts.rootId + '_content_view"></div>'
-        let text = '<div id="' + this._opts.rootId + '_content_text"></div>'
-        root = root.replace('[con]', view + text)
-        $('#' + this._opts.rootId + '_content').html(root)
-
-        $('#' + this._opts.rootId).css({
-            'position': 'absolute',
-            'left': '0px',
-            'width': $(window).width(),
-            'height': $(window).height(),
-            'display': 'none',
-            'background': 'rgba(0,0,0,' + this._opts.maskOpacity + ')',
-            'z-index': -1,
-            'box-sizing': 'border-box'
-        })
-
-        // 内容视图
-        let con_w = $(window).width() / 3
-        $('#' + this._opts.rootId + '_content').css({
-            'width': con_w,
-            'height': con_w,
-            'padding': '15px',
-            'margin-top': ($(window).height() - con_w) / 2,
-            'margin-left': ($(window).width() - con_w) / 2,
-            'display': 'flex',
-            'justify-content': 'center',
-            'align-items': 'center',
-            'border-radius': '10px',
-            'border': '1px solid ' + this._opts.colorBoxLine,
-            'background': this._opts.colorBox,
-            'box-sizing': 'border-box'
-        })
-
-        $('#' + this._opts.rootId + '_content_root').css({
-            'width': '100%',
-            'height': 'auto',
-            'display': 'flex',
-            'flex-direction': 'column',
-            'justify-content': 'flex-start',
-            'align-items': 'center',
-            'box-sizing': 'border-box'
-        })
-
-        // 加载视图
-        $('#' + this._opts.rootId + '_content_view').css({
-            'width': 'auto',
-            'height': 'auto',
-            'box-sizing': 'border-box'
-        })
-
-        // 提示文字
-        $('#' + this._opts.rootId + '_content_text').css({
-            'width': 'auto',
-            'height': 'auto',
-            'max-width': '100%',
-            'word-wrap': 'break-word',
-            'word-break': 'break-all',
-            'font-size': '16px',
-            'font-weight': this._opts.textWeight,
-            'color': this._opts.colorText,
-            'margin-top': '20px',
-            "overflow": "hidden",
-            "text-overflow": "ellipsis",
-            "white-space": "nowrap",
-            'box-sizing': 'border-box'
-        })
-
-        $('#' + this._opts.rootId).click((event) => {
-            event.stopPropagation()
-
-            if (this._opts.isTouchCancel) {
-                this._close()
-            }
-        })
+        console.log('spin constructor', this._opts)
     }
 
-    show(showopts) {
-        if (this.isshow) {
+    spin(target) {
+        this.stop()
+
+        if (target == null) {
             return
         }
 
-        this.isshow = true
+        let id = $(target).attr('id')
 
-        this._showopts = AppTool.structureAssignment(this._showopts, showopts, true)
+        let root = '<div id="' + id + '_spin_root">[con]</div>'
 
-        $('#' + this._opts.rootId).css({
-            'z-index': routing.changedZIndex()
+        let run = '<div class="lds-spinner" id="' + id + '_lds_spin">[con]</div>'
+
+        let view_petal = ''
+
+        for (let i = 0; i < this._opts.petalSum; i++) {
+            view_petal += '<div class="' + id + '_petal"></div>'
+        }
+
+        $(target).html(root.replace('[con]', run.replace('[con]', view_petal)))
+
+        // 设置样式
+        this.dom = $('#' + id + '_spin_root') // 根视图对象
+
+        this.dom.css({
+            'display': 'flex',
+            'justify-content': 'center',
+            'align-items': 'center',
+            'width': '100%',
+            'height': 'auto',
+            'box-sizing': 'border-box'
         })
 
-        $('#' + this._opts.rootId).fadeIn(500)
+        let spin_w = (this._opts.petalRadius * 2 + this._opts.internalRadius) * 2
 
-        switch (this._showopts.mode) {
-            case 1: {
-                $('#' + this._opts.rootId + '_content_text').css({
-                    'display': 'block'
-                })
+        let spin_h = (this._opts.petalRadius * 2 + this._opts.internalRadius) * 2
 
-                if (this._showopts.text == '') {
-                    this._showopts.text = 'Framework'
-                }
+        let petal_w = this._opts.petalRadius * 2
 
-                $('#' + this._opts.rootId + '_content_text').html(this._showopts.text)
+        let petal_h = this._opts.petalRadius * 2
 
-                break
-            }
-            case 2: {
-                $('#' + this._opts.rootId + '_content_text').css({
-                    'display': 'none'
-                })
+        let petal_top = (spin_h - petal_h) / 2
 
-                $('#' + this._opts.rootId + '_content_text').html('')
+        let offset_x = (spin_w / 2)
 
-                break
-            }
-            default: {
-                $('#' + this._opts.rootId + '_content_text').css({
-                    'display': 'block'
-                })
+        let offset_y = (spin_h / 2) - petal_top
 
-                if (this._showopts.text == '') {
-                    this._showopts.text = 'Framework'
-                }
+        let origin_tran = offset_x + 'px ' + offset_y + 'px'
 
-                $('#' + this._opts.rootId + '_content_text').html(this._showopts.text)
+        $('#' + id + '_lds_spin').css({
+            'position': 'relative',
+            'width': spin_w + 'px',
+            'height': spin_h + 'px'
+        })
 
-                break
-            }
+        $('.' + id + '_petal').css({
+            'left': '0px',
+            'top': petal_top + 'px',
+            'position': 'absolute',
+            'width': petal_w + 'px',
+            'height': petal_h + 'px',
+            'border-radius': '50%',
+            'transform-origin': origin_tran,
+            '-webkit-transform-origin': origin_tran,
+            'background': this._opts.color
+        })
+
+        let rotate_increment = 360 / this._opts.petalSum
+
+        let times_increment = 1 / this._opts.petalSum
+
+        for (let i = 0; i < this._opts.petalSum; i++) {
+            let index = i + 1
+
+            let deg = (rotate_increment * index) - rotate_increment
+
+            let times = ((times_increment * index) - 1).toFixed(2)
+
+            $('.lds-spinner div:nth-child(' + index + ')').css({
+                'transform': 'rotate(' + deg + 'deg)',
+                '-webkit-transform': 'rotate(' + deg + 'deg)',
+                'animation': 'lds-spinner linear 1s infinite',
+                '-webkit-animation': 'lds-spinner linear 1s infinite',
+                'animation-delay': times + 's',
+                '-webkit-animation-delay': times + 's'
+            })
         }
-
-        this.spinner.spin(AppTool.o(this._opts.rootId + '_content_view'))
     }
 
-    close(tag) {
-        if (this._showopts.tag == null) {
-            this._close()
-        } else if (this._showopts.tag == tag) {
-            this._close()
+    stop() {
+        if (this.dom != null) {
+            this.dom.remove()
+
+            this.dom = null
+
+            console.log('spin for stop')
         }
-    }
-
-    _close() { // 私有
-        this._showopts.tag = null
-
-        this.isshow = false
-
-        this.spinner.spin()
-
-        $('#' + this._opts.rootId).fadeOut(500)
     }
 }
