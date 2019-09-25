@@ -38,6 +38,8 @@ export default class SwiperTab extends BaseComponent {
     }
 
     constructor(opts) {
+        super()
+
         if (opts == null || opts.rootId == null || opts.tabList == null || opts.tabList.length == 0) {
             return
         }

@@ -28,6 +28,8 @@ export default class Pageview extends BaseComponent {
     }
 
     constructor(opts) {
+        super()
+        
         if (opts == null || opts.rootId == null || opts.pageList == null || opts.pageList.length == 0) {
             return
         }

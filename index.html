@@ -35,25 +35,34 @@
 
         <!-- 弹窗盒子 id 遵循尾固定 -->
         <div class="pages-popupbox" id="popupBox">
-            <div class="pages-popupbox-content" id="popupBox_content"></div>
+            <div class="pages-popupbox-mask" id="popupBox_mask">
+                <div class="pages-popupbox-content" id="popupBox_content"></div>
+            </div>
         </div>
 
         <!-- 消息盒子 id 遵循尾固定 -->
-        <div class="pages-msgbox" id="msgBox">
-            <div class="pages-msgbox-content" id="msgBox_content"></div>
+        <div class="pages-tipsbox" id="tipsBox">
+            <div class="pages-tipsbox-mask" id="tipsBox_mask">
+                <div class="pages-tipsbox-content" id="tipsBox_content"></div>
+            </div>
         </div>
 
         <!-- 提示盒子 id 遵循尾固定 -->
         <div class="pages-toast" id="toast">
-            <div class="pages-toast-content" id="toast_content">message</div>
+            <div class="pages-toast-mask" id="toast_mask">
+                <div class="pages-toast-content" id="toast_content">message</div>
+            </div>
         </div>
 
         <!-- 加载盒子 id 遵循尾固定 -->
         <div class="pages-load" id="loading">
-            <div class="pages-load-content" id="loading_content"></div>
+                <div class="pages-load-mask" id="loading_mask">
+                    <div class="pages-load-content" id="loading_content"></div>
+                </div>
         </div>
     </div>
 </body>
+
 <script language="javascript" type="module" src="./app.js"></script>
 
 </html>

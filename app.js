@@ -1,6 +1,6 @@
 import Activity from './component/Activity.view.js';
 import Pageview from './component/Pageview.view.js';
-import ElandTab from './component/Tab.view.js';
+import ElandTab from './component/SwiperTab.view.js';
 import FrameworkEland from './base/Framework.js';
 import Listview from './component/Listview.view.js';
 
@@ -16,61 +16,90 @@ class AppDome {
 
         this.pageview = {}
 
-        let main_opts = {
+        this.listview = {}
+
+        let main_opts = { // 配置对象
             rootId: 'app_main',
-            name: null, // 优先级高于 getContent
-            getContent: null,
-            setStyle: () => { },
-            title: '',
-            toolbarTopFontSize: '16px',
-            toolbarTopFontStyle: '', // italic oblique
-            toolbarTopFontWeight: 'normal', // normal bold
-            toolbarTopLogo: './pic/theme/log.png',
-            toolbarTopMenuImg: null,
-            toolbarTopTouchType: 'def',
-            toolbarTopH: 55,
-            toolbarTopColor: 'black',
-            toolbarTopColorDK: 'black',
-            toolbarTopTextColor: 'white',
-            toolbarTopBtnTouchColor: '#cca352',
-            toolbarTopOpenBtnBordLine: false,
-            toolbarTopShadowColor: null,
-            toolbarTopShadowLen: null,
-            contentBgColor: 'white',
-            contentLoadColor: 'red',
-            draweMenuType: 'left',
-            draweContentColor: null,
-            draweWidthScale: 0.6,
-            draweMenuName: '',
-            draweMenuGetContent: () => {
-                return 'draweMenuGetContent'
+            content: {
+                name: null,
+                getContent: null,
+                setStyle: function () {
+                },
+                initHandle: function (succ) {
+                    console.log('main act content initHandle: ' + succ)
+                }
             },
-            draweMenuSetStyle: () => {
-                console.log('draweMenuSetStyle')
+            toolbar: { // 操作栏配置
+                topH: 50,
+                finish: {
+                    active: false,
+                    icon: './pic/theme/back.png'
+                },
+                logo: {
+                    active: true,
+                    icon: './pic/theme/log.png',
+                    touchHandle: null
+                },
+                title: {
+                    active: false,
+                    text: 'FrameworkEland',
+                    align: 'left',
+                    touchHandle: null
+                },
+                font: {
+                    color: 'white',
+                    style: 'normal',
+                    weight: 'normal'
+                },
+                shadow: {
+                    color: '#000',
+                    length: 2
+                },
+                buttons: [{
+                    level: 1,
+                    id: 'email_menu',
+                    icon: './pic/theme/email.png',
+                    text: '按钮',
+                    touchHandle: () => {
+                        this.subact.show()
+                    }
+                }],
+                background: 'black'
             },
-            draweMenuHandle: () => {
-                console.log('draweMenuHandle for main')
+            drawer: { // 抽屉菜单配置
+                active: true,
+                icon: './pic/theme/menu.png',
+                type: 'left', // left right
+                background: 'white',
+                widthscale: 0.75,
+                name: '',
+                getContent: function () {
+                    return 'draweMenuGetContent'
+                },
+                setStyle: function () {
+                },
+                initHandle: function (succ) {
+                    console.log('main act drawer initHandle: ' + succ)
+                },
+                changedHandle(isopen) {
+                    console.log('main act drawer changedHandle: ' + isopen)
+                }
             },
-            finishHandel: () => { // 返回处理器
-                this.frame.showMsgBox({
-                    title: 'MAIN ACT FINISH',
-                    isHideBackBtn: true,
-                    isTouchOtherClose: true,
-                    getContent: () => {
-                        return 'welcome framework dome'
-                    },
-                    setStyle: () => { },
-                    backHandle: () => { }
-                })
+            preloading: { // 预加载配置
+                color: 'red'
             },
-            resumeHandel: () => {
-                console.log('main act resumeHandel')
+            background: 'white',
+            finishTopHandle: () => {
+                console.log('main act finishTopHandle')
             },
-            pauseHandel: () => {
-                console.log('main act pauseHandel')
+            resumeHandle: () => {
+                console.log('main act resumeHandle')
             },
-            initHandel: () => {
-                new Listview({
+            pauseHandle: () => {
+                console.log('main act pauseHandle')
+            },
+            initHandle: () => {
+                this.listview = new Listview({
                     rootId: 'app_main_content',
                     ispull: true,
                     threshold: 100,
@@ -107,7 +136,8 @@ class AppDome {
                     emptyview: () => {
                         return '没有数据喔喔哦喔'
                     },
-                    emptystyle: () => { },
+                    emptystyle: () => {
+                    },
                     downHandle: (handle) => {
                         setTimeout(() => {
                             let lis = []
@@ -141,51 +171,83 @@ class AppDome {
                     }
                 })
 
-                console.log('main act initHandel')
-            },
-            toolbarTopLogoTouchHandle: () => {
-                console.log('toolbarTopLogoTouchHandle')
+                console.log('main act initHandle')
             }
         }
 
-        let sub_opts = {
+        let sub_opts = { // 配置对象
             rootId: 'app_sub',
-            name: null, // 优先级高于 getContent
-            getContent: null,
-            setStyle: null,
-            title: 'DOME',
-            toolbarTopFontSize: '16px',
-            toolbarTopFontStyle: '', // italic oblique
-            toolbarTopFontWeight: 'normal', // normal bold
-            toolbarTopLogo: './pic/theme/log.png',
-            toolbarTopBackImg: './pic/theme/back.png',
-            toolbarTopMenuImg: null,
-            toolbarTopTouchType: 'def',
-            toolbarTopH: 55,
-            toolbarTopColor: 'black',
-            toolbarTopColorDK: 'black',
-            toolbarTopTextColor: 'white',
-            toolbarTopBtnTouchColor: '#cca352',
-            toolbarTopOpenBtnBordLine: false,
-            toolbarTopShadowColor: null,
-            toolbarTopShadowLen: null,
-            contentBgColor: 'white',
-            contentLoadColor: '#cca352',
-            draweMenuType: 'right',
-            draweContentColor: 'red',
-            draweWidthScale: 0.6,
-            draweMenuName: '',
-            draweMenuGetContent: () => {
-                return 'draweMenuGetContent'
+            content: {
+                name: null,
+                getContent: null,
+                setStyle: function () {
+                },
+                initHandle: function (succ) {
+                    console.log('sub act content initHandle: ' + succ)
+                }
             },
-            draweMenuSetStyle: () => {
-                console.log('draweMenuSetStyle')
+            toolbar: { // 操作栏配置
+                topH: 50,
+                finish: {
+                    active: true,
+                    icon: './pic/theme/back.png'
+                },
+                logo: {
+                    active: false,
+                    icon: './pic/theme/log.png',
+                    touchHandle: null
+                },
+                title: {
+                    active: true,
+                    text: 'SUB_DOME',
+                    align: 'left',
+                    touchHandle: null
+                },
+                font: {
+                    color: 'white',
+                    style: 'normal',
+                    weight: 'normal'
+                },
+                shadow: {
+                    color: '#000',
+                    length: 2
+                },
+                buttons: [{
+                    level: 1,
+                    id: 'email_menu',
+                    icon: './pic/theme/email.png',
+                    text: '按钮',
+                    touchHandle: () => {
+                        this.tabact.show()
+                    }
+                }],
+                background: 'black'
             },
-            draweMenuHandle: () => {
-                console.log('draweMenuHandle for sub')
+            drawer: { // 抽屉菜单配置
+                active: true,
+                icon: './pic/theme/menu.png',
+                type: 'right', // left right
+                background: 'white',
+                widthscale: 0.75,
+                name: '',
+                getContent: function () {
+                    return 'draweMenuGetContent'
+                },
+                setStyle: function () {
+                },
+                initHandle: function (succ) {
+                    console.log('sub act drawer initHandle: ' + succ)
+                },
+                changedHandle(isopen) {
+                    console.log('sub act drawer changedHandle: ' + isopen)
+                }
             },
-            finishHandel: () => { // 返回处理器
-                this.frame.showMsgBox({
+            preloading: { // 预加载配置
+                color: 'red'
+            },
+            background: 'white',
+            finishTopHandle: () => {
+                this.frame.showTipsBox({
                     title: 'SUB ACT FINISH',
                     isHideBackBtn: true,
                     isTouchOtherClose: true,
@@ -195,16 +257,18 @@ class AppDome {
                     setStyle: () => { },
                     backHandle: () => { }
                 })
+
+                console.log('sub act finishTopHandle')
             },
-            resumeHandel: () => {
+            resumeHandle: () => {
                 this.pageview.update()
 
-                console.log('sub act resumeHandel')
+                console.log('sub act resumeHandle')
             },
-            pauseHandel: () => {
-                console.log('sub act pauseHandel')
+            pauseHandle: () => {
+                console.log('sub act pauseHandle')
             },
-            initHandel: () => {
+            initHandle: () => {
                 this.pageview = new Pageview({
                     rootId: 'app_sub_content',
                     defaultIndex: 0,
@@ -243,60 +307,86 @@ class AppDome {
                         setStyle: null
                     }]
                 })
-                console.log('sub act initHandel')
-            },
-            toolbarTopLogoTouchHandle: () => {
-                console.log('toolbarTopLogoTouchHandle')
+
+                console.log('sub act initHandle')
             }
         }
 
-        let tab_opts = {
+        let tab_opts = { // 配置对象
             rootId: 'app_tab',
-            name: null, // 优先级高于 getContent
-            getContent: null,
-            setStyle: null,
-            title: 'DOME',
-            toolbarTopFontSize: '16px',
-            toolbarTopFontStyle: '', // italic oblique
-            toolbarTopFontWeight: 'normal', // normal bold
-            toolbarTopLogo: './pic/theme/log.png',
-            toolbarTopBackImg: './pic/theme/back.png',
-            toolbarTopMenuImg: null,
-            toolbarTopTouchType: 'def',
-            toolbarTopH: 55,
-            toolbarTopColor: 'black',
-            toolbarTopColorDK: 'black',
-            toolbarTopTextColor: 'white',
-            toolbarTopBtnTouchColor: '#cca352',
-            toolbarTopOpenBtnBordLine: false,
-            toolbarTopShadowColor: null,
-            toolbarTopShadowLen: null,
-            contentBgColor: 'white',
-            contentLoadColor: '#cca352',
-            draweMenuType: 'right',
-            draweContentColor: 'red',
-            draweWidthScale: 0.6,
-            draweMenuName: '',
-            draweMenuGetContent: () => {
-                return 'draweMenuGetContent'
+            content: {
+                name: null,
+                getContent: null,
+                setStyle: function () {
+                },
+                initHandle: function (succ) {
+                    console.log('tab act content initHandle: ' + succ)
+                }
             },
-            draweMenuSetStyle: () => {
-                console.log('draweMenuSetStyle')
+            toolbar: { // 操作栏配置
+                topH: 50,
+                finish: {
+                    active: true,
+                    icon: './pic/theme/back.png'
+                },
+                logo: {
+                    active: false,
+                    icon: './pic/theme/log.png',
+                    touchHandle: null
+                },
+                title: {
+                    active: true,
+                    text: 'TAB_DOME',
+                    align: 'left',
+                    touchHandle: null
+                },
+                font: {
+                    color: 'white',
+                    style: 'normal',
+                    weight: 'normal'
+                },
+                shadow: {
+                    color: '#000',
+                    length: 2
+                },
+                buttons: [],
+                background: 'black'
             },
-            draweMenuHandle: () => {
-                console.log('draweMenuHandle for sub')
+            drawer: { // 抽屉菜单配置
+                active: true,
+                icon: './pic/theme/menu.png',
+                type: 'right', // left right
+                background: 'white',
+                widthscale: 0.75,
+                name: '',
+                getContent: function () {
+                    return 'draweMenuGetContent'
+                },
+                setStyle: function () {
+                },
+                initHandle: function (succ) {
+                    console.log('tab act drawer initHandle: ' + succ)
+                },
+                changedHandle(isopen) {
+                    console.log('tab act drawer changedHandle: ' + isopen)
+                }
             },
-            finishHandel: () => { // 返回处理器
+            preloading: { // 预加载配置
+                color: 'red'
             },
-            resumeHandel: () => {
+            background: 'white',
+            finishTopHandle: () => {
+                console.log('tab act finishTopHandle')
+            },
+            resumeHandle: () => {
                 this.elandTab.update()
 
-                console.log('tab act resumeHandel')
+                console.log('tab act resumeHandle')
             },
-            pauseHandel: () => {
-                console.log('tab act pauseHandel')
+            pauseHandle: () => {
+                console.log('tab act pauseHandle')
             },
-            initHandel: () => {
+            initHandle: () => {
                 this.elandTab = new ElandTab({
                     rootId: 'app_tab_content',
                     tabH: 45,
@@ -388,10 +478,7 @@ class AppDome {
                     }]
                 })
 
-                console.log('tab act initHandel')
-            },
-            toolbarTopLogoTouchHandle: () => {
-                console.log('toolbarTopLogoTouchHandle')
+                console.log('tab act initHandle')
             }
         }
 
@@ -405,87 +492,49 @@ class AppDome {
 
         this.subact = new Activity(sub_opts)
 
-
         this.tabact = new Activity(tab_opts)
 
-        // 添加顶部工具栏按钮 推荐使用 btn type 添加按钮 非 btn type 添加按钮请尽量保持一种 type 已获得更好的视觉效果
-        // 所有按钮的样式受 Act 实例配置对象影响
-        this.subact.addTopOptBtn([{
-            type: 'btn', // text img btn
-            touchType: null, // def zoom color 只对 btn type 有效 为空则继承实例配置对象TOUCH类型
-            img: './pic/theme/email.png', // 当 type 为 btn img 优先级高于 texts
-            text: '',
-            touchHandle: () => {
-                this.tabact.show()
-
-                console.log('touchHandle for btn img')
-            }
-        }])
-
-        // this.subact.showTopLogo()
-
-        // this.subact.hideTopTitle()
-
         this.mact = this.frame.getMainAct()
-
-        this.mact.addTopOptBtn([{
-            type: 'btn', // text img btn
-            touchType: null, // def zoom color 只对 btn type 有效 为空则继承实例配置对象TOUCH类型
-            img: './pic/theme/email.png', // 当 type 为 btn img 优先级高于 text
-            text: '',
-            touchHandle: () => {
-                this.subact.show()
-
-                console.log('touchHandle for btn img')
-            }
-        }])
     }
 
-    showLoading() {
-        this.frame.showLoading({
-            mode: 1,
-            text: 'welcome Framework',
-            tag: 'frame'
-        })
+    showLoading(text) {
+        this.frame.showLoading(text)
     }
 
-    showToast() {
-        this.frame.showToast('welcome Framework welcome Frameworkwelcome Frameworkwelcome Frameworkwelcome Frameworkwelcome Frameworkwelcome Framework')
+    showToast(text) {
+        this.frame.showToast(text)
     }
 
-    showMsgBox() {
-        this.frame.showMsgBox({
-            title: '提示',
-            isHideBackBtn: true,
-            isTouchOtherClose: true,
-            getContent: () => {
-                return 'welcome framework dome'
+    showTipsBox(text) {
+        this.frame.showTipsBox({
+            title: 'TipsBox',
+            name: null,
+            getContent: function () { // handle
+                return text
             },
-            setStyle: () => { },
-            backHandle: function () { }
+            setStyle: function () { // handle
+            },
         })
     }
 
     showPopup() {
         this.frame.showPopup({
             name: null,
-            getContent: () => {
+            getContent: function () {
                 return '<div style="width: 200px;height: 200px;background: blue"></div>'
             },
-            setStyle: () => { },
-            bindHandle: () => { },
-            closeHandle: () => { }
+            setStyle: function () {
+            }
         })
     }
 
     // close
-
     closePopup() {
         this.frame.closePopup()
     }
 
-    closeMsgBox() {
-        this.frame.closeMsgBox()
+    closeTipsBox() {
+        this.frame.closeTipsBox()
     }
 
     closeToast() {

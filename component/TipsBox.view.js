@@ -4,71 +4,85 @@ import AppTool from '../tool/Tool.js';
 
 export default class TipsBox extends BaseComponent {
     _opts = {
-        rootId: 'msgBox',
-        topColor: '#cca352',
-        topColorDK: '#cca352',
-        contentColor: 'white',
-        textColor: 'black'
+        rootId: 'tipsBox',
+        maskId: null,
+        contentId: null,
+        isTouchCancel: true,
+        topBackground: '#cca352',
+        contentBackground: 'white',
+        colorText: 'black',
+        cancelHandel: null // handle
     }
 
     _showopts = {
-        title: '',
-        contentH: '200px',
-        isHideBackBtn: false,
-        isTouchOtherClose: true,
+        title: 'TipsBox',
+        name: null,
         getContent: null, // handle
         setStyle: null, // handle
-        backHandel: null // handle
     }
 
-    window_w
+    _showopts_keep = {
+        title: 'TipsBox',
+        name: null,
+        getContent: null, // handle
+        setStyle: null, // handle
+    }
 
-    window_h
+    win_width = $(window).width()
+
+    win_height = $(window).height()
+
+    con_height = 200
+
+    top_height = 45
 
     constructor(opts) {
+        super()
+
         this._opts = AppTool.structureAssignment(this._opts, opts, true)
 
-        this.window_w = $(window).width()
+        this.win_width = $(window).width()
 
-        this.window_h = $(window).height()
+        this.win_height = $(window).height()
 
-        this._init()
-    }
+        this.con_height = this.win_height / 3.8
 
-    _init() { // 内部方法
-        let top = '<div class="pages-msgbox-content-top" id="msgBox_content_top">[con]</div>'
+        this.top_height = 45
 
-        let top_back = '<div class="pages-msgbox-content-top-back" id="msgBox_content_top_back">[con]</div>'
+        this._opts.maskId = this._opts.rootId + '_mask'
 
-        let top_back_img = '<img src="./pic/theme/back.png" style="height: 15px"/>'
+        this._opts.contentId = this._opts.rootId + '_content'
 
-        top_back = top_back.replace('[con]', top_back_img)
+        let top = '<div class="pages-tipsbox-content-top" id="' + this._opts.contentId + '_top">[con]</div>'
 
-        let top_text = '<div class="pages-msgbox-content-top-text" id="msgBox_content_top_text">text</div>'
+        let view = '<div class="pages-tipsbox-content-view" id="' + this._opts.contentId + '_view"></div>'
 
-        let top_line = '<div style="width: 45px"></div>'
-
-        top = top.replace('[con]', top_back + top_text + top_line)
-
-        let view = '<div class="pages-msgbox-content-view" id="msgBox_content_view"></div>'
-
-        $('#' + this._opts.rootId + '_content').html(top + view)
+        $('#' + this._opts.contentId).html(top + view)
 
         $('#' + this._opts.rootId).css({
             'position': 'absolute',
-            'left': '0px',
-            'top': '0px',
-            'width': this.window_w,
-            'height': this.window_h,
+            'left': 0,
+            'top': 0,
+            'width': this.win_width,
+            'height': this.win_height,
             'display': 'none',
             'z-index': -1,
             'box-sizing': 'border-box'
         })
 
-        $('#' + this._opts.rootId + '_content').css({
-            'width': this.window_w,
-            'height': 'auto',
-            'y': this.window_h,
+        $('#' + this._opts.maskId).css({
+            'position': 'relative',
+            'width': '100%',
+            'height': '100%',
+            'box-sizing': 'border-box'
+        })
+
+        $('#' + this._opts.contentId).css({
+            'position': 'absolute',
+            'bottom': -(this.con_height + this.top_height),
+            'left': 0,
+            'width': '100%',
+            'height': 'fit-content',
             'display': 'flex',
             'flex-direction': 'column',
             'justify-content': 'flex-start',
@@ -76,113 +90,87 @@ export default class TipsBox extends BaseComponent {
             'box-sizing': 'border-box'
         })
 
-        $('#' + this._opts.rootId + '_content_top').css({
-            'display': 'flex',
-            'justify-content': 'space-between',
-            'align-items': 'center',
+        $('#' + this._opts.contentId + '_top').css({
             'width': '100%',
-            'height': '45px',
-            'background': this._opts.topColor,
+            'height': this.top_height,
+            'display': 'flex',
+            'justify-content': 'center',
+            'align-items': 'center',
+            'background': this._opts.topBackground,
             'font-size': '16px',
-            'color': this._opts.textColor
+            'color': this._opts.colorText,
+            'box-sizing': 'border-box'
         })
 
-        $('#' + this._opts.rootId + '_content_top_back').css({
-            'width': '45px',
-            'height': '45px',
-            'display': 'flex',
-            'justify-content': 'center',
-            'align-items': 'center'
-        })
-
-        $('#' + this._opts.rootId + '_content_top_text').css({
-            'height': '45px',
-            'display': 'flex',
-            'justify-content': 'center',
-            'align-items': 'center'
-        })
-
-        $('#' + this._opts.rootId + '_content_view').css({
+        $('#' + this._opts.contentId + '_view').css({
             'width': '100%',
-            'height': '200px',
+            'height': this.con_height,
             'display': 'flex',
             'justify-content': 'center',
             'align-items': 'center',
-            'background': this._opts.contentColor,
-            'font-size': '14px',
-            'color': this._opts.textColor
+            'background': this._opts.contentBackground,
+            'font-size': '16px',
+            'color': this._opts.colorText,
+            'box-sizing': 'border-box'
         })
 
-        AppTool.setBtnOnTouchEvent($('#' + this._opts.rootId + '_content_top_back'), (obj) => {
-            if (this._showopts.backHandel) {
-                this._showopts.backHandel()
-            }
+        AppTool.o(this._opts.maskId).onclick = (e) => {
+            e.stopPropagation()
 
-            this.close()
-        }, this._opts.topColorDK, '', null)
-
-        $('#' + this._opts.rootId).click(() => {
-            if (this._showopts.isTouchOtherClose) {
+            if (this._opts.isTouchCancel) {
                 this.close()
             }
-        })
+        }
 
-        $('#' + this._opts.rootId + '_content_view').click((event) => { })
-
-        $('#' + this._opts.rootId + '_content_top').click((event) => { })
-
-        $('#' + this._opts.rootId + '_content_view').on('click', (event) => {
-            event.stopPropagation()
-        })
-
-        $('#' + this._opts.rootId + '_content_top').on('click', (event) => {
-            event.stopPropagation()
-        })
+        AppTool.o(this._opts.contentId).onclick = (e) => {
+            e.stopPropagation()
+        }
     }
 
     show(showopts) {
-        this._showopts = AppTool.structureAssignment(this._showopts, showopts, true)
+        this._showopts = AppTool.structureAssignment(Object.assign({}, this._showopts_keep), showopts, true)
 
-        $('#' + this._opts.rootId).css({
-            'display': 'block',
-            'z-index': routing.changedZIndex()
+        $('#' + this._opts.rootId).css('z-index', routing.changedZIndex())
+
+        $('#' + this._opts.rootId).fadeIn(100, () => {
+            $('#' + this._opts.contentId).transition({
+                bottom: 0
+            }, 'fast')
         })
 
-        if (this._showopts.isHideBackBtn) {
-            $('#' + this._opts.rootId + '_content_top_back').css({
-                'visibility': 'hidden'
+        $('#' + this._opts.contentId + '_top').html(this._showopts.title)
+
+        if (this._showopts.name) {
+            AppTool.LoadHTML({
+                link: this._showopts.name,
+                conId: this._opts.contentId + '_view',
+                succHandle: () => {
+                },
+                errHandle: () => {
+                    $('#' + this._opts.contentId + '_view').html('LOAD HTML ERROR!')
+                },
+                renum: 3,
+                color: this._opts.topBackground
             })
         } else {
-            $('#' + this._opts.rootId + '_content_top_back').css({
-                'visibility': 'visible'
-            })
-        }
+            if (this._showopts.getContent) {
+                $('#' + this._opts.contentId + '_view').html(this._showopts.getContent())
+            }
 
-        $('#' + this._opts.rootId + '_content_view').css({
-            'height': this._showopts.contentH
-        })
-
-        $('#' + this._opts.rootId + '_content').transition({
-            y: this.window_h - (Number(this._showopts.contentH.replace('px', '')) + 45)
-        }, 'fast')
-
-        $('#' + this._opts.rootId + '_content_top_text').html(this._showopts.title)
-
-        if (this._showopts.getContent) {
-            $('#' + this._opts.rootId + '_content_view').html(this._showopts.getContent())
-        }
-
-        if (this._showopts.setStyle) {
-            this._showopts.setStyle()
+            if (this._showopts.setStyle) {
+                this._showopts.setStyle()
+            }
         }
     }
 
     close() {
-        $('#' + this._opts.rootId + '_content').transition({
-            y: this.window_h
+        $('#' + this._opts.contentId).transition({
+            bottom: -(this.con_height + this.top_height)
         }, 'slow', () => {
-            $('#' + this._opts.rootId).css({
-                'display': 'none'
+            $('#' + this._opts.rootId).fadeOut(100, () => {
+                if (this._opts.cancelHandel) {
+                    this._opts.cancelHandel()
+                }
             })
         })
     }

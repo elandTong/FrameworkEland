@@ -64,6 +64,8 @@ export default class ListviewBox extends BaseComponent {
     isPauseUp = false
 
     constructor(opts) {
+        super()
+        
         if (opts == null || opts.rootId == null) {
             return
         }

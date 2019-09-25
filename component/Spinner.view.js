@@ -12,6 +12,8 @@ export default class Spinner extends BaseComponent {
     }
 
     constructor(opts) {
+        super()
+        
         this._opts = Tool.structureAssignment(this._opts, opts, true)
 
         console.log('spin constructor', this._opts)

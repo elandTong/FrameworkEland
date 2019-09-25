@@ -34,6 +34,8 @@ export default class Listview extends BaseComponent {
     _list = []
 
     constructor(opts) {
+        super()
+        
         if (opts == null || opts.rootId == null || opts.itemview == null) {
             console.error('list view for opts pame null')
 

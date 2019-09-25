@@ -9,19 +9,24 @@ export default class TouchLock extends BaseComponent {
         canvasContext: null,
         canvasWidth: $(window).width(),
         canvasHeight: 350,
-        canvasOffsetTop: 0,
-        canvasOffsetX = 50,
-        canvasOffsetY = 30,
-        type = 'setPwd',
-        r = 25,
-        nR = r / 2,
-        wColor = pageBgColor,
-        nColor = "#ffffff",
-        touchColor = "#7fffd4",
-        lineColor = "#7fffd4",
-        hiddenLine = false,
-        backCallFun = null,
-        verifyHandle: null
+        canvasOffsetX: 50,
+        canvasOffsetY: 30,
+        type: 'setPwd',
+        point: {
+            outerRadius: 25,
+            innerRadius: 25 / 2,
+            colorOuter: 'red',
+            colorInner: '#FFF',
+            colorTouch: '#7FFFD4',
+        },
+        line: {
+            color: '#7FFFD4',
+            hide: false
+        },
+        setPassHandle: function (pass) {
+        },
+        verifyHandle: function (pass) {
+        }
     }
 
     pointsLocation = []
@@ -30,11 +35,13 @@ export default class TouchLock extends BaseComponent {
 
     isTwiceInput = false // 是否第二次输入
 
-    titleTopList = ['设置手势密码', '验证手势密码']
+    tipsType = ['设置手势密码', '验证手势密码']
 
-    titleBottomList = ["您需要连接至少5个点", "请重复一次输入的手势密码", "重复手势密码错误,请重新输入!", "手势密码太短,至少需要5个点", "密码设置成功"];
+    tipsIn = ['您需要连接至少5个点', '请重复一次输入的手势密码', '重复手势密码错误,请重新输入!', '手势密码太短,至少需要5个点', '密码设置成功']
 
     constructor(opts) {
+        super()
+
         if (opts.rootId == null) {
             return
         }
@@ -55,7 +62,7 @@ export default class TouchLock extends BaseComponent {
 
         this.setStyle()
 
-        this._opts.canvasDom = document.getElementById(this._opts.rootId + '_canvas')
+        this._opts.canvasDom = Tool.o(this._opts.rootId + '_canvas')
 
         this._opts.canvasDom.width = this._opts.canvasWidth
 
@@ -63,9 +70,9 @@ export default class TouchLock extends BaseComponent {
 
         this._opts.canvasContext = this.canvasDom.getContext('2d')
 
-        let X = (this._opts.canvasWidth - 2 * this._opts.canvasOffsetX - this._opts.r * 2 * 3) / 2
+        let X = (this._opts.canvasWidth - 2 * this._opts.canvasOffsetX - this._opts.point.outerRadius * 2 * 3) / 2
 
-        let Y = (this._opts.canvasHeight - 2 * this._opts.canvasOffsetY - this._opts.r * 2 * 3) / 2
+        let Y = (this._opts.canvasHeight - 2 * this._opts.canvasOffsetY - this._opts.point.outerRadius * 2 * 3) / 2
 
         this.pointsLocation = this.caculateNineCenterLocation(X, Y)
 
@@ -80,8 +87,8 @@ export default class TouchLock extends BaseComponent {
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 3; col++) {
                 pos.push({
-                    X: (this._opts.canvasOffsetX + col * diffX + (col * 2 + 1) * this._opts.r),
-                    Y: (this._opts.canvasOffsetY + row * diffY + (row * 2 + 1) * this._opts.r)
+                    X: (this._opts.canvasOffsetX + col * diffX + (col * 2 + 1) * this._opts.point.outerRadius),
+                    Y: (this._opts.canvasOffsetY + row * diffY + (row * 2 + 1) * this._opts.point.outerRadius)
                 })
             }
         }
@@ -90,39 +97,38 @@ export default class TouchLock extends BaseComponent {
     }
 
     initTouchEvent() {
-        let linePoint = [] // 绘制的密码
+        let touch_point = [] // 绘制的密码
 
-        let touchmoveIsDraw = false
+        let touchmove_pause = false
 
         this._opts.canvasDom.addEventListener('touchstart', (e) => {
             requestAnimationFrame(() => {
-                this.isPointTouched(e.touches[0], linePoint)
+                this.isPointTouched(e.touches[0], touch_point)
             })
         }, false)
 
-
         this._opts.canvasDom.addEventListener('touchmove', (e) => {
-            if (touchmoveIsDraw) {
+            if (touchmove_pause) {
                 return
             }
 
-            touchmoveIsDraw = true
+            touchmove_pause = true
 
             e.preventDefault()
 
             requestAnimationFrame(() => {
                 let touches = e.touches[0]
 
-                this.isPointTouched(touches, linePoint)
+                this.isPointTouched(touches, touch_point)
 
                 this._opts.canvasContext.clearRect(0, 0, this._opts.canvasWidth, this._opts.canvasHeight)
 
-                this.draw(this.pointsLocation, linePoint, {
+                this.draw(this.pointsLocation, touch_point, {
                     X: touches.pageX,
                     Y: touches.pageY
                 })
 
-                touchmoveIsDraw = false
+                touchmove_pause = false
             })
         }, false)
 
@@ -130,15 +136,15 @@ export default class TouchLock extends BaseComponent {
             requestAnimationFrame(() => {
                 this._opts.canvasContext.clearRect(0, 0, this._opts.canvasWidth, this._opts.canvasHeight)
 
-                draw(this.pointsLocation, linePoint, null)
+                draw(this.pointsLocation, touch_point, null)
 
-                if (linePoint.length < 5) {
-                    $('#' + layoutId + '_bot_tip').html(this.titleBottomList[3])
+                if (touch_point.length < 5) {
+                    $('#' + layoutId + '_bot_tip').html(this.tipsIn[3])
                 } else {
                     if (this._opts.type == 'setPwd') {
-                        this.setPassword(linePoint)
+                        this.setPassword(touch_point)
                     } else {
-                        this.verifyPassword(linePoint)
+                        this.verifyPassword(touch_point)
                     }
                 }
 
@@ -146,99 +152,89 @@ export default class TouchLock extends BaseComponent {
 
                 draw(this.pointsLocation, [], null)
 
-                linePoint = []
+                touch_point = []
             })
         }, false)
     }
 
-    isPointTouched(touches, linePoint) {
-        if (this._opts.canvasOffsetTop == 0) {
-            this._opts.canvasOffsetTop = this._opts.canvasDom.offsetTop
-        }
-
+    isPointTouched(touches, touch_point) {
         for (let i = 0; i < this.pointsLocation.length; i++) {
-            if (linePoint.indexOf(i) >= 0) {
+            if (touch_point.indexOf(i) >= 0) {
                 continue
             }
 
-            let currentPoint = this.pointsLocation[i]
+            let current_point = this.pointsLocation[i]
 
-            let xdiff = Math.abs(currentPoint.X - touches.pageX);
+            let xdiff = Math.abs(current_point.X - touches.pageX);
 
-            let ydiff = Math.abs(currentPoint.Y - (touches.pageY - this._opts.canvasOffsetTop))
+            let ydiff = Math.abs(current_point.Y - (touches.pageY - this._opts.canvasDom.offsetTop))
 
             let dir = Math.pow((xdiff * xdiff + ydiff * ydiff), 0.5)
 
-            if (dir <= this._opts.r) {
-                if (linePoint.length > 0) {
-                    let indexLast = linePoint[linePoint.length - 1] + 1
+            if (dir <= this._opts.point.outerRadius) {
+                if (touch_point.length > 0) {
+                    let last_point = touch_point[touch_point.length - 1] + 1
 
                     let index = i + 1
 
-                    let pushIndex
+                    let push_point
 
-                    if ((indexLast + index) % 2 == 0) {
-                        if ((indexLast % 2) == 0 && (index % 2) == 0) {
-                            if ((indexLast + index) / 2 == 5) {
-                                pushIndex = 4
+                    if ((last_point + index) % 2 == 0) {
+                        if ((last_point % 2) == 0 && (index % 2) == 0) {
+                            if ((last_point + index) / 2 == 5) {
+                                push_point = 4
 
-                                if (linePoint.indexOf(pushIndex) < 0) {
-                                    linePoint.push(pushIndex)
+                                if (touch_point.indexOf(push_point) < 0) {
+                                    touch_point.push(push_point)
                                 }
                             }
                         } else {
-                            if (indexLast != 5 && index != 5) {
-                                pushIndex = (indexLast + index) / 2 - 1
+                            if (last_point != 5 && index != 5) {
+                                push_point = (last_point + index) / 2 - 1
 
-                                if (linePoint.indexOf(pushIndex) < 0) {
-                                    linePoint.push(pushIndex)
+                                if (touch_point.indexOf(push_point) < 0) {
+                                    touch_point.push(push_point)
                                 }
                             }
                         }
                     }
                 }
 
-                linePoint.push(i)
+                touch_point.push(i)
 
                 break
             }
         }
     }
 
-    draw(_pointsLocation, _linePoints, _touchPoint) {
-        if (_linePoints.length > 0) {
+    draw(_points_location, _line_points, _touch_point) {
+        if (_line_points.length > 0) {
             this._opts.canvasContext.beginPath()
 
-            if (!this._opts.hiddenLine) {
-                for (let i = 0; i < _linePoints.length; i++) {
-                    let pointIndex = _linePoints[i]
+            if (!this._opts.line.hide) {
+                for (let i = 0; i < _line_points.length; i++) {
+                    let point_index = _line_points[i]
 
-                    this._opts.canvasContext.lineTo(_pointsLocation[pointIndex].X, _pointsLocation[pointIndex].Y);
+                    this._opts.canvasContext.lineTo(_points_location[point_index].X, _points_location[point_index].Y);
                 }
             }
 
             this._opts.canvasContext.lineWidth = 2
 
-            this._opts.canvasContext.strokeStyle = this._opts.lineColor
+            this._opts.canvasContext.strokeStyle = this._opts.line.color
 
             this._opts.canvasContext.stroke()
 
             this._opts.canvasContext.closePath()
 
-            if (_touchPoint != null && !this._opts.hiddenLine) {
-                if (this._opts.canvasOffsetTop == 0) {
-                    this._opts.canvasOffsetTop = this._opts.canvasDom.offsetTop
-                }
-
-                let lastPointIndex = _linePoints[_linePoints.length - 1]
-
-                let lastPoint = _pointsLocation[lastPointIndex]
+            if (_touch_point != null && !this._opts.line.hide) {
+                let _last_point = _points_location[_line_points[_line_points.length - 1]]
 
                 this._opts.canvasContext.beginPath()
 
-                this._opts.canvasContext.moveTo(lastPoint.X, lastPoint.Y)
+                this._opts.canvasContext.moveTo(_last_point.X, _last_point.Y)
 
-                this._opts.canvasContext.lineTo(_touchPoint.X, Math.abs(_touchPoint.Y - this._opts.canvasOffsetTop))
+                this._opts.canvasContext.lineTo(_touch_point.X, Math.abs(_touch_point.Y - this._opts.canvasDom.offsetTop))
 
                 this._opts.canvasContext.stroke()
 
@@ -246,35 +242,35 @@ export default class TouchLock extends BaseComponent {
             }
         }
 
-        for (let i = 0; i < _pointsLocation.length; i++) {
-            let Point = _pointsLocation[i]
+        for (let i = 0; i < _points_location.length; i++) {
+            let _point = _points_location[i]
 
-            this._opts.canvasContext.fillStyle = this._opts.wColor
+            this._opts.canvasContext.fillStyle = this._opts.point.colorOuter
 
             this._opts.canvasContext.beginPath()
 
-            this._opts.canvasContext.arc(Point.X, Point.Y, r, 0, Math.PI * 2, true)
+            this._opts.canvasContext.arc(_point.X, _point.Y, this._opts.point.outerRadius, 0, Math.PI * 2, true)
 
             this._opts.canvasContext.closePath()
 
             this._opts.canvasContext.fill()
 
-            this._opts.canvasContext.fillStyle = this._opts.nColor
+            this._opts.canvasContext.fillStyle = this._opts.point.colorInner
 
             this._opts.canvasContext.beginPath()
 
-            this._opts.canvasContext.arc(Point.X, Point.Y, nR, 0, Math.PI * 2, true)
+            this._opts.canvasContext.arc(_point.X, _point.Y, this._opts.point.innerRadius, 0, Math.PI * 2, true)
 
             this._opts.canvasContext.closePath()
 
             this._opts.canvasContext.fill()
 
-            if (_linePoints.indexOf(i) >= 0) {
-                this._opts.canvasContext.fillStyle = this._opts.touchColor
+            if (_line_points.indexOf(i) >= 0) {
+                this._opts.canvasContext.fillStyle = this._opts.point.colorTouch
 
                 this._opts.canvasContext.beginPath()
 
-                this._opts.canvasContext.arc(Point.X, Point.Y, this._opts.r, 0, Math.PI * 2, true)
+                this._opts.canvasContext.arc(_point.X, _point.Y, this._opts.point.outerRadius, 0, Math.PI * 2, true)
 
                 this._opts.canvasContext.closePath()
 
@@ -289,37 +285,33 @@ export default class TouchLock extends BaseComponent {
         this.tempLinePoint = []
     }
 
-    setPassword(_LinePoint) {
+    setPassword(_touch_point) {
         if (this.isTwiceInput == false) { //首次绘制
-            this.tempLinePoint = _LinePoint
+            this.tempLinePoint = _touch_point
 
             this.isTwiceInput = true
 
-            $('#' + this._opts.rootId + '_bot_tip').html(this.titleBottomList[1])
+            $('#' + this._opts.rootId + '_bot_tip').html(this.tipsIn[1])
         } else { //再次绘制
-            if (this.tempLinePoint.join('') === _LinePoint.join('')) {
-                saveLocalStorage("touchLockPassword", _LinePoint.join(''))
+            if (this.tempLinePoint.join('') == _touch_point.join('')) {
+                $('#' + this._opts.rootId + '_bot_tip').html(this.tipsIn[4])
 
-                saveLocalStorage("touchLockSaveDate", new Date().getTime())
+                this.isTwiceInput = false
 
-                $("#" + layoutId + "_bot_tip").html(titleBottomList[4])
+                this.tempLinePoint = []
 
-                isTwiceInput = false
-
-                tempLinePoint = []
-
-                if (this._opts.backCallFun != null) {
-                    this._opts.backCallFun(_LinePoint.join(''))
+                if (this._opts.setPassHandle) {
+                    this._opts.setPassHandle(_touch_point.join(''))
                 }
             } else { // 重复绘制错误
-                $('#' + this._opts.rootId + '_bot_tip').html(this.titleBottomList[2])
+                $('#' + this._opts.rootId + '_bot_tip').html(this.tipsIn[2])
             }
         }
     }
 
-    verifyPassword(_LinePoint) {
+    verifyPassword(_touch_point) {
         if (this._opts.verifyHandle) {
-            this._opts.verifyHandle(_LinePoint.join(''), (data) => {
+            this._opts.verifyHandle(_touch_point.join(''), (data) => {
                 if (data.success) {
                     this.reset()
 
