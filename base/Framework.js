@@ -1,5 +1,5 @@
 import Activity from '../component/Activity.view.js';
-import PopupBox from '../component/PopupBox.view.js';
+import Popupwindow from '../component/Popupwindow.view.js';
 import SpinnerBox from '../component/SpinnerBox.view.js';
 import TipsBox from '../component/TipsBox.view.js';
 import Toast from '../component/Toast.view.js';
@@ -23,7 +23,7 @@ export default class FrameworkEland {
 
     mainAtivity = null // 主 act
 
-    msgBox = new TipsBox({
+    tipsBox = new TipsBox({
         rootId: 'msgBox',
         topColor: '#cca352',
         topColorDK: '#cca352',
@@ -31,7 +31,7 @@ export default class FrameworkEland {
         textColor: 'black'
     })
 
-    popup = new PopupBox({
+    popup = new Popupwindow({
         rootId: 'popupBox',
         align: 'center',
         isfadeIn: true,
@@ -47,7 +47,7 @@ export default class FrameworkEland {
         fontSize: '16px'
     })
 
-    loadview = new SpinnerBox({
+    spinnerBox = new SpinnerBox({
         rootId: 'loading',
         maskOpacity: 0,
         colorSpin: '#FFFFFF',
@@ -93,11 +93,11 @@ export default class FrameworkEland {
     }
 
     showMsgBox(opts) {
-        this.msgBox.show(opts)
+        this.tipsBox.show(opts)
     }
 
     closeMsgBox() {
-        this.msgBox.close()
+        this.tipsBox.close()
     }
 
     showToast(msg) {
@@ -125,11 +125,11 @@ export default class FrameworkEland {
     }
 
     showLoading(opts) {
-        this.loadview.show(opts)
+        this.spinnerBox.show(opts)
     }
 
     closeLoading(tag) {
-        this.loadview.close(tag)
+        this.spinnerBox.close(tag)
     }
 
     finish() {

@@ -1,5 +1,5 @@
-import BaseComponent from "../base/Component"
-import Tool from "../tool/Tool"
+import BaseComponent from "../base/Component.js"
+import Tool from "../tool/Tool.js"
 
 export default class TouchLock extends BaseComponent {
     _opts = {

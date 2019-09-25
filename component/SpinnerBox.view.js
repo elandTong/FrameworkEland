@@ -1,5 +1,5 @@
-import BaseComponent from "../base/Component"
-import Tool from "../tool/Tool"
+import BaseComponent from "../base/Component.js"
+import Tool from "../tool/Tool.js"
 import Spinner from "./Spinner.view.js"
 
 export default class SpinnerBox extends BaseComponent {
