@@ -2,6 +2,7 @@ import BaseComponent from "../base/Component.js"
 import Routing from "../base/Routing.js"
 import Tool from "../tool/Tool.js"
 import Spinner from "./Spinner.view.js"
+import Activity from "./Activity.view.js"
 
 
 export default class SpinnerBox extends BaseComponent {
@@ -20,9 +21,27 @@ export default class SpinnerBox extends BaseComponent {
         isTouchCancel: true
     }
 
+    componentHandleOpts = {
+        onCreate: () => {
+        },
+        onResume: () => {
+        },
+        onPause: () => {
+            this.close()
+        },
+        onUpdate: () => {
+        },
+        onDestroy: () => {
+        }
+    }
+
     spinner = null
 
+    activity = null
+
     isshow = false
+
+    content_width = 0
 
     constructor(opts) {
         super()
@@ -37,11 +56,14 @@ export default class SpinnerBox extends BaseComponent {
             color: this._opts.colorSpin
         })
 
+        this.content_width = $(window).width() / 3
+
         let root = '<div id="' + this._opts.contentId + '_root">[con]</div>'
         let view = '<div id="' + this._opts.contentId + '_view"></div>'
         let text = '<div id="' + this._opts.contentId + '_text"></div>'
 
         $('#' + this._opts.contentId).html(root.replace('[con]', view + text))
+
 
         $('#' + this._opts.rootId).css({
             'position': 'absolute',
@@ -50,7 +72,6 @@ export default class SpinnerBox extends BaseComponent {
             'width': $(window).width(),
             'height': $(window).height(),
             'display': 'none',
-            'background': 'rgba(0,0,0,' + this._opts.maskOpacity + ')',
             'z-index': -1,
             'box-sizing': 'border-box'
         })
@@ -59,18 +80,18 @@ export default class SpinnerBox extends BaseComponent {
             'position': 'relative',
             'width': '100%',
             'height': '100%',
+            'background': 'rgba(0,0,0,' + this._opts.maskOpacity + ')',
             'box-sizing': 'border-box'
         })
 
-        // 内容视图
-        let con_w = $(window).width() / 3
         $('#' + this._opts.contentId).css({
             'position': 'absolute',
             'left': '50%',
             'top': '50%',
             'transform': 'translate(-50%,-50%)',
-            'width': con_w,
-            'height': con_w,
+            'z-index': 10,
+            'width': this.content_width,
+            'height': this.content_width,
             'padding': '15px',
             'display': 'flex',
             'justify-content': 'center',
@@ -81,6 +102,7 @@ export default class SpinnerBox extends BaseComponent {
             'box-sizing': 'border-box'
         })
 
+        // 内容根视图
         $('#' + this._opts.contentId + '_root').css({
             'width': '100%',
             'height': 'auto',
@@ -128,16 +150,16 @@ export default class SpinnerBox extends BaseComponent {
         }
     }
 
-    show(text) {
-        if (this.isshow) {
+    show(act, text) {
+        if (this.isshow || act == null || !(act instanceof Activity) || act.isresume == false) {
             return
         }
+
+        this.activity = act
 
         this._opts.text = text ? text : 'LOADING...'
 
         this.isshow = true
-
-        $('#' + this._opts.rootId).css('z-index', Routing.changedZIndex())
 
         switch (this._opts.mode) {
             case 1: {
@@ -165,13 +187,25 @@ export default class SpinnerBox extends BaseComponent {
 
         this.spinner.spin(Tool.o(this._opts.contentId + '_view'))
 
+        if (this.activity && this.activity.pushComponentHandle) {
+            this.activity.pushComponentHandle(this.componentHandleOpts)
+        }
+
+        $('#' + this._opts.rootId).css('z-index', Routing.changedZIndex())
+
         $('#' + this._opts.rootId).fadeIn(300, () => { })
     }
 
     close() {
-        this.isshow = false
+        if (this.activity && this.activity.removeComponentHandle) {
+            this.activity.removeComponentHandle(this.componentHandleOpts)
+        }
+
+        this.activity = null
 
         $('#' + this._opts.rootId).fadeOut(300, () => {
+            this.isshow = false
+
             this.spinner.spin()
         })
     }

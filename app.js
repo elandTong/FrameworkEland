@@ -497,16 +497,47 @@ class AppDome {
         this.mact = this.frame.getMainAct()
     }
 
+    showMainLoading(text) {
+        this.frame.showLoading(this.mact, text)
+    }
+
+    showMainToast(text) {
+        this.frame.showToast(this.mact, text)
+    }
+
+    showMainTipsBox(text) {
+        this.frame.showTipsBox(this.mact, {
+            title: 'TipsBox',
+            name: null,
+            getContent: function () { // handle
+                return text
+            },
+            setStyle: function () { // handle
+            },
+        })
+    }
+
+    showMainPopup() {
+        this.frame.showPopup(this.mact, {
+            name: null,
+            getContent: function () {
+                return '<div style="width: 200px;height: 200px;background: blue"></div>'
+            },
+            setStyle: function () {
+            }
+        })
+    }
+
     showLoading(text) {
-        this.frame.showLoading(text)
+        this.frame.showLoading(this.subact, text)
     }
 
     showToast(text) {
-        this.frame.showToast(text)
+        this.frame.showToast(this.subact, text)
     }
 
     showTipsBox(text) {
-        this.frame.showTipsBox({
+        this.frame.showTipsBox(this.subact, {
             title: 'TipsBox',
             name: null,
             getContent: function () { // handle
@@ -518,7 +549,7 @@ class AppDome {
     }
 
     showPopup() {
-        this.frame.showPopup({
+        this.frame.showPopup(this.subact, {
             name: null,
             getContent: function () {
                 return '<div style="width: 200px;height: 200px;background: blue"></div>'

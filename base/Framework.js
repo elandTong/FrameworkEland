@@ -57,8 +57,9 @@ export default class FrameworkEland {
 
     tipsBox = new TipsBox({
         rootId: 'tipsBox',
+        maskOpacity: 0.1,
         isTouchCancel: true,
-        topBackground: '#cca352',
+        topBackground: '#4169E1',
         contentBackground: 'white',
         colorText: 'black',
         cancelHandel: function () { // handle
@@ -67,10 +68,13 @@ export default class FrameworkEland {
 
     popup = new Popupwindow({
         rootId: 'popupBox',
-        align: 'center',
-        isTouchCancel: false,
-        opacity: 0,
-        bindHandle: function () {
+        align: 'center', // top bottom center none(position)
+        position: {
+            x: 20, y: 20
+        },
+        isTouchCancel: true,
+        opacity: 0.1,
+        openHandle: function () {
         },
         closeHandle: function () {
         }
@@ -78,7 +82,12 @@ export default class FrameworkEland {
 
     toast = new Toast({
         rootId: 'toast',
-        maskOpacity: 0,
+        maskId: null,
+        contentId: null,
+        maskOpacity: 0.1,
+        position: 'center', // top bottom center
+        autoCancel: true,
+        autoCancelLength: 'short', // short long
         isTouchCancel: true,
         colorText: '#cccccc',
         colorBox: '#383838',
@@ -88,7 +97,7 @@ export default class FrameworkEland {
     spinnerBox = new SpinnerBox({
         rootId: 'loading',
         mode: 1,
-        maskOpacity: 0,
+        maskOpacity: 0.1,
         text: 'Framework',
         colorSpin: '#FFFFFF',
         colorBox: 'rgba(56,56,56,0.5)',
@@ -128,38 +137,38 @@ export default class FrameworkEland {
         routing.pushActivity(activity)
     }
 
-    showTipsBox(opts) {
-        this.tipsBox.show(opts)
+    showTipsBox(act, opts) {
+        this.tipsBox.show(act, opts)
     }
 
     closeTipsBox() {
         this.tipsBox.close()
     }
 
-    showToast(text) {
-        this.toast.show(text)
+    showToast(act, text) {
+        this.toast.show(act, text)
     }
 
     closeToast() {
         this.toast.close()
     }
 
-    showPopup(opts) {
+    showPopup(act, opts) {
         let pame = {
             name: null,
             getContent: null,
             setStyle: null
         }
 
-        this.popup.show(opts)
+        this.popup.show(act, opts)
     }
 
     closePopup() {
         this.popup.close()
     }
 
-    showLoading(text) {
-        this.spinnerBox.show(text)
+    showLoading(act, text) {
+        this.spinnerBox.show(act, text)
     }
 
     closeLoading() {
@@ -167,7 +176,7 @@ export default class FrameworkEland {
     }
 
     finish() {
-        routing._finishForce()
+        routing.nativeComeBack()
     }
 
     _setframestyle() {

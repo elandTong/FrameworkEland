@@ -1,6 +1,7 @@
 import BaseComponent from '../base/Component.js';
 import routing from '../base/Routing.js';
 import AppTool from '../tool/Tool.js';
+import Activity from './Activity.view.js';
 
 export default class TipsBox extends BaseComponent {
     _opts = {
@@ -8,7 +9,8 @@ export default class TipsBox extends BaseComponent {
         maskId: null,
         contentId: null,
         isTouchCancel: true,
-        topBackground: '#cca352',
+        maskOpacity: 0,
+        topBackground: '#4169E1',
         contentBackground: 'white',
         colorText: 'black',
         cancelHandel: null // handle
@@ -28,6 +30,20 @@ export default class TipsBox extends BaseComponent {
         setStyle: null, // handle
     }
 
+    componentHandleOpts = {
+        onCreate: () => {
+        },
+        onResume: () => {
+        },
+        onPause: () => {
+            this.close()
+        },
+        onUpdate: () => {
+        },
+        onDestroy: () => {
+        }
+    }
+
     win_width = $(window).width()
 
     win_height = $(window).height()
@@ -35,6 +51,10 @@ export default class TipsBox extends BaseComponent {
     con_height = 200
 
     top_height = 45
+
+    isshow = false
+
+    activity = null
 
     constructor(opts) {
         super()
@@ -74,6 +94,7 @@ export default class TipsBox extends BaseComponent {
             'position': 'relative',
             'width': '100%',
             'height': '100%',
+            'background': 'rgba(0,0,0,' + this._opts.maskOpacity + ')',
             'box-sizing': 'border-box'
         })
 
@@ -81,6 +102,7 @@ export default class TipsBox extends BaseComponent {
             'position': 'absolute',
             'bottom': -(this.con_height + this.top_height),
             'left': 0,
+            'z-index': 10,
             'width': '100%',
             'height': 'fit-content',
             'display': 'flex',
@@ -127,8 +149,20 @@ export default class TipsBox extends BaseComponent {
         }
     }
 
-    show(showopts) {
+    show(act, showopts) {
+        if (this.isshow || act == null || !(act instanceof Activity) || act.isresume == false) {
+            return
+        }
+
+        this.activity = act
+
         this._showopts = AppTool.structureAssignment(Object.assign({}, this._showopts_keep), showopts, true)
+
+        if (this.activity && this.activity.pushComponentHandle) {
+            this.activity.pushComponentHandle(this.componentHandleOpts)
+        }
+
+        this.isshow = true
 
         $('#' + this._opts.rootId).css('z-index', routing.changedZIndex())
 
@@ -164,10 +198,18 @@ export default class TipsBox extends BaseComponent {
     }
 
     close() {
+        if (this.activity && this.activity.removeComponentHandle) {
+            this.activity.removeComponentHandle(this.componentHandleOpts)
+        }
+
+        this.activity = null
+
         $('#' + this._opts.contentId).transition({
             bottom: -(this.con_height + this.top_height)
         }, 'slow', () => {
             $('#' + this._opts.rootId).fadeOut(100, () => {
+                this.isshow = false
+
                 if (this._opts.cancelHandel) {
                     this._opts.cancelHandel()
                 }

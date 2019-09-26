@@ -2,6 +2,11 @@ import BaseComponent from '../base/Component.js';
 import routing from '../base/Routing.js';
 import AppTool from '../tool/Tool.js';
 
+/**
+ * 核心组件
+ * 视图组织
+ * by eland.Tong
+ */
 class Toolbar {
     // button opts
     _button_opts = {
@@ -590,6 +595,16 @@ class Activity extends BaseComponent {
         }
     }
 
+    componentHandleOpts = {
+        onCreate: null,
+        onResume: null,
+        onPause: null,
+        onUpdate: null,
+        onDestroy: null
+    }
+
+    componentHandles = []
+
     window_w = $(window).width()
     window_h = $(window).height()
 
@@ -603,6 +618,7 @@ class Activity extends BaseComponent {
     page_drawe_menu = null
 
     isshow = false // act 是否显示
+    isresume = false
 
     constructor(opts) { // act 构造器
         super()
@@ -868,6 +884,10 @@ class Activity extends BaseComponent {
         routing.pushActivity(this)
     }
 
+    getToolbar() {
+        return this.toolbar
+    }
+
     draweMenu() {
         let dis = this.page_drawe.css('display')
 
@@ -932,22 +952,6 @@ class Activity extends BaseComponent {
         console.log('close drawe menu')
     }
 
-    onResume() {
-        super.onResume()
-
-        if (this._opts.resumeHandle) {
-            this._opts.resumeHandle()
-        }
-    }
-
-    onPause() {
-        super.onPause()
-
-        if (this._opts.pauseHandle) {
-            this._opts.pauseHandle()
-        }
-    }
-
     // activity 基础处理器
     finish() {
         routing.finish(this)
@@ -957,7 +961,36 @@ class Activity extends BaseComponent {
         routing.setInterceptHandel(handle)
     }
 
-    onCreate() {
+    pushComponentHandle(opts) {
+        if (opts == null) {
+            return
+        }
+
+        this.componentHandles.push(opts)
+    }
+
+    removeComponentHandle(opts) {
+        if (opts == null) {
+            return
+        }
+
+        for (let i = 0; i < this.componentHandles.length; i++) {
+            if (this.componentHandles[i] === opts) {
+                this.componentHandles[i] = null
+            }
+        }
+    }
+
+    runRemove() {
+        for (let i = 0; i < this.componentHandles.length; i++) {
+            if (this.componentHandles[i] == null) {
+                this.componentHandles.splice(i, 1)
+            }
+        }
+    }
+
+    // component 生命周期回调
+    onCreate() { // 创建
         super.onCreate()
 
         this.page.css({
@@ -974,9 +1007,53 @@ class Activity extends BaseComponent {
         }
 
         this.isshow = true
+
+        for (let opt of this.componentHandles) {
+            if (opt && opt.onCreate) {
+                opt.onCreate()
+            }
+        }
+
+        this.runRemove()
     }
 
-    onDestroy() {
+    onResume() { // 恢复
+        super.onResume()
+
+        this.isresume = true
+
+        if (this._opts.resumeHandle) {
+            this._opts.resumeHandle()
+        }
+
+        for (let opt of this.componentHandles) {
+            if (opt && opt.onResume) {
+                opt.onResume()
+            }
+        }
+
+        this.runRemove()
+    }
+
+    onPause() { // 暂停
+        super.onPause()
+
+        this.isresume = false
+
+        if (this._opts.pauseHandle) {
+            this._opts.pauseHandle()
+        }
+
+        for (let opt of this.componentHandles) {
+            if (opt && opt.onPause) {
+                opt.onPause()
+            }
+        }
+
+        this.runRemove()
+    }
+
+    onDestroy() { // 销毁
         super.onDestroy()
 
         if (this._opts.isMainAct == false) { // 非主 act
@@ -992,10 +1069,26 @@ class Activity extends BaseComponent {
         if (this._opts.finishTopHandle) {
             this._opts.finishTopHandle()
         }
+
+        for (let opt of this.componentHandles) {
+            if (opt && opt.onDestroy) {
+                opt.onDestroy()
+            }
+        }
+
+        this.runRemove()
     }
 
-    onUpdate() {
+    onUpdate() { // 更新
         super.onUpdate()
+
+        for (let opt of this.componentHandles) {
+            if (opt && opt.onUpdate) {
+                opt.onUpdate()
+            }
+        }
+
+        this.runRemove()
     }
 
     onShowToolbar() {
@@ -1010,10 +1103,6 @@ class Activity extends BaseComponent {
             'top': 0,
             'height': this.window_h
         })
-    }
-
-    getToolbar() {
-        return this.toolbar
     }
 }
 

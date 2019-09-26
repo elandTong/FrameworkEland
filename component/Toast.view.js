@@ -1,6 +1,7 @@
 import BaseComponent from '../base/Component.js'
 import routing from '../base/Routing.js'
 import AppTool from '../tool/Tool.js'
+import Activity from './Activity.view.js'
 
 export default class Toast extends BaseComponent {
     _opts = {
@@ -17,7 +18,23 @@ export default class Toast extends BaseComponent {
         fontSize: '16px'
     }
 
+    componentHandleOpts = {
+        onCreate: () => {
+        },
+        onResume: () => {
+        },
+        onPause: () => {
+            this.close()
+        },
+        onUpdate: () => {
+        },
+        onDestroy: () => {
+        }
+    }
+
     toast = null // dom 对象
+
+    activity = null
 
     cancelTimeout = null
 
@@ -42,7 +59,6 @@ export default class Toast extends BaseComponent {
             'width': $(window).width(),
             'height': $(window).height(),
             'display': 'none',
-            'background': 'rgba(0,0,0,' + this._opts.maskOpacity + ')',
             'box-sizing': 'border-box'
         })
 
@@ -50,11 +66,13 @@ export default class Toast extends BaseComponent {
             'position': 'relative',
             'width': '100%',
             'height': '100%',
+            'background': 'rgba(0,0,0,' + this._opts.maskOpacity + ')',
             'box-sizing': 'border-box'
         })
 
         $('#' + this._opts.contentId).css({
             'position': 'absolute',
+            'z-index': 10,
             'width': 'fit-content',
             'height': 'fit-content',
             'max-width': '90%',
@@ -126,28 +144,50 @@ export default class Toast extends BaseComponent {
         }
     }
 
-    show(text) {
-        this.toast.css('z-index', routing.changedZIndex())
+    show(act, text) {
+        if (act == null || !(act instanceof Activity) || act.isresume == false) {
+            return
+        }
+
+        this.activity = act
+
+        clearTimeout(this.cancelTimeout)
+
+        if (this.activity && this.activity.pushComponentHandle) {
+            this.activity.pushComponentHandle(this.componentHandleOpts)
+        }
 
         $('#' + this._opts.contentId).html(text)
 
+        this.toast.css('z-index', routing.changedZIndex())
+
         this.toast.fadeIn(300, () => {
-            let times
+            if (this._opts.autoCancel) {
+                let times = 1000
 
-            if (this._opts.autoCancelLength == 'short') {
-                times = 1000
+                if (this._opts.autoCancelLength == 'short') {
+                    times = 1000
+                } else {
+                    times = 3000
+                }
+
+                this.cancelTimeout = setTimeout(() => {
+                    this.close()
+                }, times)
             } else {
-                times = 3000
+                clearTimeout(this.cancelTimeout)
             }
-
-            this.cancelTimeout = setTimeout(() => {
-                this.close()
-            }, times)
         })
     }
 
     close() {
         clearTimeout(this.cancelTimeout)
+
+        if (this.activity && this.activity.removeComponentHandle) {
+            this.activity.removeComponentHandle(this.componentHandleOpts)
+        }
+
+        this.activity = null
 
         this.toast.fadeOut(300, () => { })
     }

@@ -20,40 +20,56 @@ div {
 
 .pages-popupbox {
     position: absolute;
-    display: none
+    width: 100%;
+    height: 100%;
+    display: none;
+    box-sizing: border-box
+}
+
+.pages-popupbox-mask {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box
 }
 
 .pages-popupbox-content {
-    position: fixed;
-    left: 50%;
-    top: 100%;
-    transform: translate(-50%, -100%);
-    z-index: -1
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    box-sizing: border-box
 }
 
 /**
  * 消息盒子样式
  **/
-.pages-msgbox {
+.pages-tipsbox {
     position: absolute;
     display: none;
     width: 100%;
     height: 100%;
     left: 0px;
     top: 0px;
-    z-index: -1
+    z-index: -1;
+    box-sizing: border-box
 }
 
-.pages-msgbox-content {
+.pages-tipsbox-mask {
+    position: relative;
     width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center
+    height: 100%;
+    box-sizing: border-box
 }
 
-.pages-msgbox-content-top {
+.pages-tipsbox-content {
+    position: absolute;
+    width: 100%;
+    height: fit-content;
+    box-sizing: border-box
+}
+
+.pages-tipsbox-content-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -62,7 +78,7 @@ div {
     background: #CCCCCC
 }
 
-.pages-msgbox-content-top-back {
+.pages-tipsbox-content-top-back {
     width: 45px;
     height: 45px;
     display: flex;
@@ -70,14 +86,14 @@ div {
     align-items: center
 }
 
-.pages-msgbox-content-top-text {
+.pages-tipsbox-content-top-text {
     height: 45px;
     display: flex;
     justify-content: center;
     align-items: center
 }
 
-.pages-msgbox-content-view {
+.pages-tipsbox-content-view {
     width: 100%;
     height: 200px;
     background: #FFFFFF;
@@ -95,14 +111,20 @@ div {
     top: 0px;
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background: rgba(0, 0, 0, 0);
-    z-index: -1
+    z-index: -1;
+    box-sizing: border-box
+}
+
+.pages-toast-mask {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box
 }
 
 .pages-toast-content {
+    position: absolute;
     height: auto;
     width: auto;
     max-width: 90%;
@@ -116,27 +138,35 @@ div {
     word-break: break-all;
     background: #383838;
     font-size: 16px;
-    color: #cccccc
+    color: #cccccc;
+    box-sizing: border-box
 }
 
 /**
  * 加载圈样式
  **/
-#pages-load {
+.pages-load {
     position: absolute;
     left: 0px;
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background: rgba(0, 0, 0, 0);
-    z-index: -1
+    z-index: -1;
+    box-sizing: border-box
 }
 
-#pages-load-content {
+.pages-load-mask {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box
+}
+
+.pages-load-content {
+    position: absolute;
     width: 100px;
-    height: 100px
+    height: 100px;
+    box-sizing: border-box
 }
 
 /**
