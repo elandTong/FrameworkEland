@@ -11,17 +11,21 @@ export default class TouchLock extends BaseComponent {
         canvasHeight: 350,
         canvasOffsetX: 50,
         canvasOffsetY: 30,
-        type: 'setPwd',
+        type: 'setPwd', // setPwd verify
         point: {
             outerRadius: 25,
             innerRadius: 25 / 2,
-            colorOuter: 'red',
-            colorInner: '#FFF',
-            colorTouch: '#7FFFD4',
+            colorOuter: '#4169E1',
+            colorInner: '#FFFFFF',
+            colorTouch: '#4169E1',
         },
         line: {
-            color: '#7FFFD4',
+            color: '#4169E1',
             hide: false
+        },
+        font: {
+            color: '#4169E1',
+            size: 16
         },
         setPassHandle: function (pass) {
         },
@@ -37,7 +41,7 @@ export default class TouchLock extends BaseComponent {
 
     tipsType = ['设置手势密码', '验证手势密码']
 
-    tipsIn = ['您需要连接至少5个点', '请重复一次输入的手势密码', '重复手势密码错误,请重新输入!', '手势密码太短,至少需要5个点', '密码设置成功']
+    tipsIn = ['您需要连接至少5个点', '请重复一次输入的手势密码', '重复手势密码错误,请重新输入!', '手势密码太短,至少需要5个点', '密码设置成功', '手势密码正确!', '手势密码错误!']
 
     constructor(opts) {
         super()
@@ -60,6 +64,8 @@ export default class TouchLock extends BaseComponent {
 
         this._opts.rootDom.html(view_root.replace('[content]', top_tip + canvas + bot_tip))
 
+        $('#' + this._opts.rootId + '_top_tip').html(this._opts.type == 'setPwd' ? this.tipsType[0] : this.tipsType[1])
+
         this.setStyle()
 
         this._opts.canvasDom = Tool.o(this._opts.rootId + '_canvas')
@@ -68,7 +74,7 @@ export default class TouchLock extends BaseComponent {
 
         this._opts.canvasDom.height = this._opts.canvasHeight
 
-        this._opts.canvasContext = this.canvasDom.getContext('2d')
+        this._opts.canvasContext = this._opts.canvasDom.getContext('2d')
 
         let X = (this._opts.canvasWidth - 2 * this._opts.canvasOffsetX - this._opts.point.outerRadius * 2 * 3) / 2
 
@@ -79,6 +85,20 @@ export default class TouchLock extends BaseComponent {
         this.draw(this.pointsLocation, [], null)
 
         this.initTouchEvent()
+    }
+
+    updateOpts(opts) {
+        if (opts == null || opts.type == null) {
+            return
+        }
+
+        this._opts.type = opts.type == 'verify' ? 'verify' : 'setPwd'
+
+        this.reset()
+
+        $('#' + this._opts.rootId + '_bot_tip').html('')
+
+        $('#' + this._opts.rootId + '_top_tip').html(this._opts.type == 'setPwd' ? this.tipsType[0] : this.tipsType[1])
     }
 
     caculateNineCenterLocation(diffX, diffY) {
@@ -136,10 +156,10 @@ export default class TouchLock extends BaseComponent {
             requestAnimationFrame(() => {
                 this._opts.canvasContext.clearRect(0, 0, this._opts.canvasWidth, this._opts.canvasHeight)
 
-                draw(this.pointsLocation, touch_point, null)
+                this.draw(this.pointsLocation, touch_point, null)
 
                 if (touch_point.length < 5) {
-                    $('#' + layoutId + '_bot_tip').html(this.tipsIn[3])
+                    $('#' + this._opts.rootId + '_bot_tip').html(this.tipsIn[3])
                 } else {
                     if (this._opts.type == 'setPwd') {
                         this.setPassword(touch_point)
@@ -150,7 +170,7 @@ export default class TouchLock extends BaseComponent {
 
                 this._opts.canvasContext.clearRect(0, 0, this._opts.canvasWidth, this._opts.canvasHeight)
 
-                draw(this.pointsLocation, [], null)
+                this.draw(this.pointsLocation, [], null)
 
                 touch_point = []
             })
@@ -165,9 +185,9 @@ export default class TouchLock extends BaseComponent {
 
             let current_point = this.pointsLocation[i]
 
-            let xdiff = Math.abs(current_point.X - touches.pageX);
+            let xdiff = Math.abs(current_point.X - touches.pageX)
 
-            let ydiff = Math.abs(current_point.Y - (touches.pageY - this._opts.canvasDom.offsetTop))
+            let ydiff = Math.abs(current_point.Y - (touches.pageY - $(this._opts.canvasDom).offset().top))
 
             let dir = Math.pow((xdiff * xdiff + ydiff * ydiff), 0.5)
 
@@ -234,7 +254,7 @@ export default class TouchLock extends BaseComponent {
 
                 this._opts.canvasContext.moveTo(_last_point.X, _last_point.Y)
 
-                this._opts.canvasContext.lineTo(_touch_point.X, Math.abs(_touch_point.Y - this._opts.canvasDom.offsetTop))
+                this._opts.canvasContext.lineTo(_touch_point.X, Math.abs(_touch_point.Y - $(this._opts.canvasDom).offset().top))
 
                 this._opts.canvasContext.stroke()
 
@@ -294,15 +314,13 @@ export default class TouchLock extends BaseComponent {
             $('#' + this._opts.rootId + '_bot_tip').html(this.tipsIn[1])
         } else { //再次绘制
             if (this.tempLinePoint.join('') == _touch_point.join('')) {
-                $('#' + this._opts.rootId + '_bot_tip').html(this.tipsIn[4])
-
-                this.isTwiceInput = false
-
-                this.tempLinePoint = []
+                this.reset()
 
                 if (this._opts.setPassHandle) {
                     this._opts.setPassHandle(_touch_point.join(''))
                 }
+
+                $('#' + this._opts.rootId + '_bot_tip').html(this.tipsIn[4])
             } else { // 重复绘制错误
                 $('#' + this._opts.rootId + '_bot_tip').html(this.tipsIn[2])
             }
@@ -315,9 +333,9 @@ export default class TouchLock extends BaseComponent {
                 if (data.success) {
                     this.reset()
 
-                    $('#' + this._opts.rootId + '_bot_tip').html('手势密码正确!')
+                    $('#' + this._opts.rootId + '_bot_tip').html(this.tipsIn[5])
                 } else {
-                    $('#' + this._opts.rootId + '_bot_tip').html('手势密码错误!')
+                    $('#' + this._opts.rootId + '_bot_tip').html(this.tipsIn[6])
                 }
             })
         }
@@ -334,20 +352,20 @@ export default class TouchLock extends BaseComponent {
             'box-sizing': 'border-box'
         })
 
+        $('#' + this._opts.rootId + '_canvas').css({
+            'width': this._opts.canvasWidth,
+            'height': this._opts.canvasHeight,
+            'box-sizing': 'border-box'
+        })
+
         $('.' + this._opts.rootId + '_tip_cas').css({
             'width': 'fit-content',
             'height': 'fit-content',
             'display': 'flex',
             'justify-content': 'center',
             'align-items': 'center',
-            'font-size': '16px',
-            'color': 'white',
-            'box-sizing': 'border-box'
-        })
-
-        $('#' + this._opts.rootId + '_canvas').css({
-            'width': this._opts.canvasWidth,
-            'height': this._opts.canvasHeight,
+            'font-size': this._opts.font.size,
+            'color': this._opts.font.color,
             'box-sizing': 'border-box'
         })
 

@@ -77,6 +77,12 @@ class Toolbar {
         background: 'white'
     }
 
+    icon_width_offset = 0.45
+
+    button_width_offset = 0.35
+
+    font_width_offset = 0.32
+
     constructor(opts) { // 构造器
         if (opts == null || opts.topId == null) {
             return
@@ -89,6 +95,7 @@ class Toolbar {
         if (this._opts.topH < 50) {
             this._opts.topH = 50
         }
+
         if (this._opts.topH > 60) {
             this._opts.topH = 60
         }
@@ -177,35 +184,44 @@ class Toolbar {
             'box-sizing': 'border-box'
         })
 
+        let icon_h = this._opts.topH * this.icon_width_offset
+
         // item icon view style
-        let icon_h = parseInt(this._opts.topH * 0.55)
         $('.' + this._opts.topId + '_icon_cas').css({
             'width': 'auto',
-            'max-width': icon_h * 2.6,
+            'max-width': icon_h * 3,
             'height': icon_h,
+
             'box-sizing': 'border-box'
         })
 
-        let icon_button_h = parseInt(this._opts.topH * 0.4)
+        let icon_button_h = this._opts.topH * this.button_width_offset
+
+        // item button view style
         $('.' + this._opts.topId + '_icon_button_cas').css({
             'width': 'auto',
             'max-width': icon_button_h * 2,
             'height': icon_button_h,
+
             'box-sizing': 'border-box'
         })
 
+        let font_size = this._opts.topH * this.font_width_offset
+
         // item text view style
-        let font_size = parseInt(this._opts.topH * 0.32)
         $('.' + this._opts.topId + '_text_cas').css({
             'width': 'fit-content',
             'height': 'fit-content',
+
             'overflow': 'hidden',
             'text-overflow': 'ellipsis',
             'white-space': 'nowrap',
+
             'font-size': font_size + 'px',
             'font-style': this._opts.font.style,
             'font-weight': this._opts.font.weight,
             'color': this._opts.font.color,
+
             'box-sizing': 'border-box'
         })
 
@@ -644,6 +660,14 @@ class Activity extends BaseComponent {
             }
         }
 
+        if (this._opts.toolbar.topH < 50) {
+            this._opts.toolbar.topH = 50
+        }
+
+        if (this._opts.toolbar.topH > 60) {
+            this._opts.toolbar.topH = 60
+        }
+
         // 配置检查
         this._opts.drawer.type = this._opts.drawer.type == 'left' ? 'left' : 'right'
 
@@ -655,7 +679,7 @@ class Activity extends BaseComponent {
 
         console.log('activity structureAssignment opts', this._opts)
 
-        this.page = $("#" + this._opts.rootId)
+        this.page = $('#' + this._opts.rootId)
 
         this.page_root = $('#' + this._opts.rootId + '_root')
 

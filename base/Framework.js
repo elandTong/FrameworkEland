@@ -57,11 +57,20 @@ export default class FrameworkEland {
 
     tipsBox = new TipsBox({
         rootId: 'tipsBox',
-        maskOpacity: 0.1,
+        maskId: null,
+        contentId: null,
         isTouchCancel: true,
-        topBackground: '#4169E1',
-        contentBackground: 'white',
-        colorText: 'black',
+        maskOpacity: 0.1,
+        closeIcon: './pic/theme/close.png',
+        top: {
+            color: 'white',
+            background: '#4169E1'
+        },
+        view: {
+            color: 'black',
+            background: 'white'
+        },
+        closeButton: true,
         cancelHandel: function () { // handle
         }
     })

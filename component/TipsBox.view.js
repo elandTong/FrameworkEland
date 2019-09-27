@@ -10,9 +10,16 @@ export default class TipsBox extends BaseComponent {
         contentId: null,
         isTouchCancel: true,
         maskOpacity: 0,
-        topBackground: '#4169E1',
-        contentBackground: 'white',
-        colorText: 'black',
+        closeIcon: './pic/theme/close.png',
+        top: {
+            color: 'white',
+            background: '#4169E1'
+        },
+        view: {
+            color: 'black',
+            background: 'white'
+        },
+        closeButton: true,
         cancelHandel: null // handle
     }
 
@@ -73,11 +80,23 @@ export default class TipsBox extends BaseComponent {
 
         this._opts.contentId = this._opts.rootId + '_content'
 
-        let top = '<div class="pages-tipsbox-content-top" id="' + this._opts.contentId + '_top">[con]</div>'
+        let styleId = 'pages-tipsbox-content'
 
-        let view = '<div class="pages-tipsbox-content-view" id="' + this._opts.contentId + '_view"></div>'
+        let top = '<div class="' + styleId + '-top" id="' + this._opts.contentId + '_top">[con]</div>'
 
-        $('#' + this._opts.contentId).html(top + view)
+        let top_item = '<div class="' + this._opts.contentId + '_top_item_cas" id="' + this._opts.contentId + '_top_item_[id]">[icon]</div>'
+
+        let top_text = '<div class="' + this._opts.contentId + '_top_text_cas" id="' + this._opts.contentId + '_top_text_title"></div>'
+
+        let view = '<div class="' + styleId + '-view" id="' + this._opts.contentId + '_view"></div>'
+
+        let icon = '<img class="' + this._opts.contentId + '_icon_cas" src=[src]></img>'
+
+        let top_none = top_item.replace('[id]', 'none').replace('[icon]', '')
+
+        let top_clos = top_item.replace('[id]', 'clos').replace('[icon]', icon.replace('[src]', this._opts.closeIcon))
+
+        $('#' + this._opts.contentId).html(top.replace('[con]', top_none + top_text + top_clos) + view)
 
         $('#' + this._opts.rootId).css({
             'position': 'absolute',
@@ -116,11 +135,35 @@ export default class TipsBox extends BaseComponent {
             'width': '100%',
             'height': this.top_height,
             'display': 'flex',
+            'justify-content': 'space-between',
+            'align-items': 'center',
+            'background': this._opts.top.background,
+            'box-sizing': 'border-box'
+        })
+
+        $('.' + this._opts.contentId + '_top_item_cas').css({
+            'width': this.top_height,
+            'height': this.top_height,
+            'display': 'flex',
             'justify-content': 'center',
             'align-items': 'center',
-            'background': this._opts.topBackground,
+            'box-sizing': 'border-box'
+        })
+
+        $('.' + this._opts.contentId + '_top_text_cas').css({
+            'width': this.win_width - (this.top_height * 2),
+            'height': this.top_height,
+            'display': 'flex',
+            'justify-content': 'center',
+            'align-items': 'center',
             'font-size': '16px',
-            'color': this._opts.colorText,
+            'color': this._opts.top.color,
+            'box-sizing': 'border-box'
+        })
+
+        $('.' + this._opts.contentId + '_icon_cas').css({
+            'width': this.top_height * 0.65,
+            'height': this.top_height * 0.65,
             'box-sizing': 'border-box'
         })
 
@@ -130,11 +173,17 @@ export default class TipsBox extends BaseComponent {
             'display': 'flex',
             'justify-content': 'center',
             'align-items': 'center',
-            'background': this._opts.contentBackground,
+            'background': this._opts.view.background,
             'font-size': '16px',
-            'color': this._opts.colorText,
+            'color': this._opts.view.color,
             'box-sizing': 'border-box'
         })
+
+        AppTool.setBtnOnTouchEventForScale($('#' + this._opts.contentId + '_top_item_clos'), 0.95, 1.0, (obj) => {
+            if (this._opts.closeButton) {
+                this.close()
+            }
+        }, null, true)
 
         AppTool.o(this._opts.maskId).onclick = (e) => {
             e.stopPropagation()
@@ -146,6 +195,13 @@ export default class TipsBox extends BaseComponent {
 
         AppTool.o(this._opts.contentId).onclick = (e) => {
             e.stopPropagation()
+        }
+
+        // HIDE BUTTON
+        if (this._opts.closeButton) {
+            $('#' + this._opts.contentId + '_top_item_clos').css('visibility', 'visible')
+        } else {
+            $('#' + this._opts.contentId + '_top_item_clos').css('visibility', 'hidden')
         }
     }
 
@@ -172,7 +228,7 @@ export default class TipsBox extends BaseComponent {
             }, 'fast')
         })
 
-        $('#' + this._opts.contentId + '_top').html(this._showopts.title)
+        $('#' + this._opts.contentId + '_top_text_title').html(this._showopts.title)
 
         if (this._showopts.name) {
             AppTool.LoadHTML({
@@ -184,7 +240,7 @@ export default class TipsBox extends BaseComponent {
                     $('#' + this._opts.contentId + '_view').html('LOAD HTML ERROR!')
                 },
                 renum: 3,
-                color: this._opts.topBackground
+                color: this._opts.top.background
             })
         } else {
             if (this._showopts.getContent) {
@@ -215,5 +271,19 @@ export default class TipsBox extends BaseComponent {
                 }
             })
         })
+    }
+
+    update(opts) {
+        if (opts == null) {
+            return
+        }
+
+        this._opts.closeButton = opts.closeButton != null ? opts.closeButton : this._opts.closeButton
+
+        if (this._opts.closeButton) {
+            $('#' + this._opts.contentId + '_top_item_clos').css('visibility', 'visible')
+        } else {
+            $('#' + this._opts.contentId + '_top_item_clos').css('visibility', 'hidden')
+        }
     }
 }

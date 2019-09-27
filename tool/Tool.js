@@ -676,31 +676,35 @@ export default class Tool {
         return this.mEventBusObj.releaseEventList(eventList)
     }
 
+    static getToolbarHeight() {
+        return $(window).height() / 12.1
+    }
+
     /**
      * 对象赋值
      * _opts : 属性接收对象
      * _newopts : 属性赋值对象
      */
-    static structureAssignment(_opts, _newopts, isIdentical) {
+    static structureAssignment(_opts, _newopts, isIdentical = true) {
         console.log('structureAssignment opts', _opts, ' nweopts', _newopts)
 
         if (_newopts == null) {
             return _opts
         }
 
-        if (isIdentical == null) {
-            isIdentical = true
-        }
-
         if (_newopts instanceof Array) {
             return _opts
         } else if (_newopts instanceof Object) {
-            Object.keys(_newopts).forEach(function (key) {
+            Object.keys(_newopts).forEach((key) => {
                 if (key in _opts) { // 判断是否存在该属性
                     if (isIdentical) {
+                        let istype = (typeof _opts[key]) == (typeof _newopts[key])
+
+                        // let isobject = !(_opts[key] instanceof Array) && (_opts[key] instanceof Object)
+
                         if (_opts[key] == null) {
                             _opts[key] = _newopts[key]
-                        } else if (typeof (_opts[key]) == typeof (_newopts[key])) {
+                        } else if (istype) {
                             _opts[key] = _newopts[key]
                         }
                     } else {
